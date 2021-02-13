@@ -3,13 +3,5 @@ module.exports = {
     trailingComma: 'none',
     singleQuote: true,
     printWidth: 120,
-    tabWidth: 4,
-    // overrides: [
-    //     {
-    //         files: '*.ts',
-    //         options: {
-    //             parser: 'typescript'
-    //         }
-    //     }
-    // ]
+    tabWidth: 4
 };

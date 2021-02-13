@@ -44,6 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
             type="button"
             className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
             style={{ backgroundColor }}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
             {...props}
         >
             {label}

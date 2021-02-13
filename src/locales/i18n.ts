@@ -1,9 +1,20 @@
+// @ts-ignore
 import i18n from 'i18next';
+// @ts-ignore
 import { initReactI18next } from 'react-i18next';
+// @ts-ignore
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import translationEN from './locales/en.json';
-import translationRU from './locales/ru.json';
+import translationEN from './en.json';
+import translationRU from './ru.json';
+
+// export type ConvertedToFunctionsType<T> = {
+//     [P in keyof T]: T[P] extends string
+//         ? () => string
+//         : ConvertedToFunctionsType<T[P]>;
+// };
+// export type TranslationResource = typeof en;
+// export type LanguageKeys = keyof TranslationResource;
 
 i18n.use(LanguageDetector)
     .use(initReactI18next) // passes i18n down to react-i18next
