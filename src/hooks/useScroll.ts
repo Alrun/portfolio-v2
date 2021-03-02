@@ -137,19 +137,29 @@ export default function useScroll(
     React.useLayoutEffect(() => {
         const el = targetElement ? targetElement.current : null;
 
-        const handleScrollEvent = throttle(
+        const handleScrollEvent = /* throttle( */
             () => {
-                setState({
-                    scrollDirection: null,
-                    position: {
-                        x: window.scrollX,
-                        y: window.scrollY
-                    }
-                });
-            },
-            delay,
-            { leading: true }
-        );
+                if (el) {
+                    setState({
+                        scrollDirection: null,
+                        position: {
+                            x: el.scrollLeft,
+                            y: el.scrollTop
+                        }
+                    });
+                } else {
+                    setState({
+                        scrollDirection: null,
+                        position: {
+                            x: window.scrollX,
+                            y: window.scrollY
+                        }
+                    });
+                }
+            };
+            /* delay,
+            { leading: true } */
+        // );
 
         if (el) {
             el.addEventListener('scroll', handleScrollEvent, { passive: true });

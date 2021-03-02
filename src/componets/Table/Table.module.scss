@@ -2,9 +2,28 @@
     //outline: 1px solid pink;
 }
 
+.head {
+    top: 0;
+    position: sticky;
+    z-index: 1;
+}
+
+.body {
+    padding-bottom: 1px;
+    overflow: hidden;
+    //scroll-snap-type: x mandatory;
+    //-webkit-overflow-scrolling: touch;
+}
+
+.bodyWrapper {
+    //-webkit-overflow-scrolling: touch;
+}
+
 .wrapper {
-    overflow: auto;
     position: relative;
+    //margin: 10em auto 30em;
+    //max-width: 960px;
+    //overscroll-behavior: contain;
 }
 
 [data-col-id="quantity"] button,
@@ -19,10 +38,23 @@
     justify-content: center;
 }
 
-.scrollBar {
-    position: fixed;
-    overflow: auto;
-    bottom: 20px;
-    width: 19px;
-    outline: 2px solid red;
+.footer {
+    bottom: 0;
+    position: sticky;
+    z-index: 1;
+    //height: 20px;
 }
+
+.footerWrapper {
+    overflow-y: hidden;
+    //-webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    background: pink;
+}
+
+.scrollBar {
+    background: violet;
+    height: 1px;
+}
+

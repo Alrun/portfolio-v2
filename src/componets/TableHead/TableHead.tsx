@@ -38,32 +38,30 @@ export default function TableHead({ handleResize, handleReorder, columns }: Tabl
         }
     }, []);
 
-    const scroll = useScroll(null, 50);
-
-    React.useEffect(() => {
-        const parentEl = rootRef.current?.parentNode as HTMLElement;
-
-        console.log(parentEl.getBoundingClientRect().top, scroll.position.y);
-
-        // window.requestAnimationFrame(() => {
-            if (parentEl.getBoundingClientRect().top < 0) {
-                // if (parentEl.getBoundingClientRect()) {
-                // @ts-ignore
-                rootRef.current.style.position = 'fixed'
-                // rootRef.current.style.top = `${Math.abs(parentEl.getBoundingClientRect().top)}px`
-                // console.log(parentEl.getBoundingClientRect());
-            } else {
-                // @ts-ignore
-                rootRef.current.style.position = 'relative'
-            }
-        // });
-
-
-    }, [scroll]);
+    // React.useEffect(() => {
+    //     const parentEl = rootRef.current?.parentNode as HTMLElement;
+    //
+    //     console.log(parentEl.getBoundingClientRect().top, scroll.position.y);
+    //
+    //     // window.requestAnimationFrame(() => {
+    //         if (parentEl.getBoundingClientRect().top < 0) {
+    //             // if (parentEl.getBoundingClientRect()) {
+    //             // @ts-ignore
+    //             rootRef.current.style.position = 'fixed'
+    //             // rootRef.current.style.top = `${Math.abs(parentEl.getBoundingClientRect().top)}px`
+    //             // console.log(parentEl.getBoundingClientRect());
+    //         } else {
+    //             // @ts-ignore
+    //             rootRef.current.style.position = 'relative'
+    //         }
+    //     // });
+    //
+    //
+    // }, [scroll]);
 
     // React.useEffect(() => {
-    //     console.log('effect');
-    // }, [columns, handleReorder])
+    //     handleSetWidth(rootRef.current?.scrollWidth);
+    // }, [handleSetWidth]);
 
     const drag = useDraggable(columnItemsRef, '[data-draggable="true"]'); // '[data-col-id]',
     // useResize(resizeItemsRef);
@@ -257,9 +255,10 @@ export default function TableHead({ handleResize, handleReorder, columns }: Tabl
     }, [drag, drag.status, drag.deltaX, handleReorder]);
 
     return (
-        <div ref={rootRef} className={classes.root}>
+        // <div ref={rootRef} className={classes.root}>
+        <div ref={rootRef} className={classes.wrapper}>
             {/* eslint-disable-next-line no-plusplus */}
-            <b style={{ position: 'absolute', top: '80px' }}>TableHead RENDER COUNT: {++rendersCount.current}</b>
+            <b style={{ position: 'absolute', top: '80px' }}>Table Head RENDER COUNT: {++rendersCount.current}</b>
             {columns &&
                 columns.map((item: any) => (
                     <div
@@ -308,5 +307,6 @@ export default function TableHead({ handleResize, handleReorder, columns }: Tabl
                     </div>
                 ))}
         </div>
+        // </div>
     );
 }

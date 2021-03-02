@@ -1,6 +1,8 @@
 html,
 #root {
     height: 100%;
+    //overflow: hidden;
+    //position: relative;
 }
 
 body {
@@ -8,6 +10,8 @@ body {
     font-family: 'Proxima Nova', $font-family-sans-serif;
     background-color: $gray-lighter;
     color: $gray-darkest;
+    //overflow: auto;
+    //position: relative;
 }
 
 
