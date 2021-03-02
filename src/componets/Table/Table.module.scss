@@ -1,0 +1,28 @@
+.root {
+    //outline: 1px solid pink;
+}
+
+.wrapper {
+    overflow: auto;
+    position: relative;
+}
+
+[data-col-id="quantity"] button,
+[data-col-id="price"] button,
+[data-col-id="change"] button,
+[data-col-id="sold"] button {
+    justify-content: flex-end;
+}
+
+[data-col-id="quota"] button,
+[data-col-id="info"] button {
+    justify-content: center;
+}
+
+.scrollBar {
+    position: fixed;
+    overflow: auto;
+    bottom: 20px;
+    width: 19px;
+    outline: 2px solid red;
+}

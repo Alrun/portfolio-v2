@@ -1,0 +1,16 @@
+.root {
+    display: flex;
+    //outline: 1px solid pink;
+}
+
+.col {
+    display: flex;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,.05) transparent rgba(0,0,0,.05) transparent;
+    //outline: 1px solid rebeccapurple;
+    background: inherit;
+    margin-bottom: -1px;
+    margin-right: -1px;
+    padding: 0 15px;
+}

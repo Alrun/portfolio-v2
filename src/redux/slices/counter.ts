@@ -19,15 +19,20 @@ export const counter = createSlice({
             // doesn't actually mutate the state because it uses the Immer library,
             // which detects changes to a "draft state" and produces a brand new
             // immutable state based off those changes
+            // eslint-disable-next-line no-param-reassign
             state.value += 1;
         },
         decrement: (state) => {
+            // eslint-disable-next-line no-param-reassign
             state.value -= 1;
         },
         incrementByAmount: (state, { payload }: PayloadAction<number>) => {
+            // eslint-disable-next-line no-param-reassign
             state.value += payload;
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         incrementAsync: (state, { payload }: PayloadAction<number>) => {
+            // eslint-disable-next-line no-param-reassign
             state.isLoading = true;
         }
     }

@@ -1,0 +1,100 @@
+html,
+#root {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    font-family: 'Proxima Nova', $font-family-sans-serif;
+    background-color: $gray-lighter;
+    color: $gray-darkest;
+}
+
+
+//html, body {
+//    height: 100%
+//}
+//
+//.wrapper {
+//    height: 100%;
+//    display: flex;
+//    flex-direction: column;
+//}
+//
+//.main {
+//    flex-grow: 1
+//}
+
+
+.custom-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1280px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+h2, .h2,
+h3, .h3,
+h4, .h4 {
+    font-weight: 400;
+}
+
+h2, .h2 {
+    font-size: 25px;
+}
+
+h3, .h3 {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+h4, .h4 {
+    font-size: 17px;
+}
+
+.p_30px {
+    padding: 30px;
+}
+
+.pt_20px {
+    padding-top: 20px;
+}
+
+.pb_30px {
+    padding-bottom: 30px;
+}
+
+.px_25px {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.mt_12px {
+    margin-top: 12px;
+}
+
+.fz_sm {
+    font-size: 0.875rem;
+}
+
+.fz_xs {
+    font-size: 0.75rem;
+}
+
+.text_gray-dark {
+    color: $gray-dark;
+}
+
+.text_green {
+    color: $green;
+}
+
+.text_blue-light {
+    color: $blue-light;
+}
+
+.bg_image {
+    background-size: cover;
+    background-position: 50%;
+}

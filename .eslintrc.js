@@ -18,6 +18,7 @@ module.exports = {
     ],
     extends: [
         "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
         "airbnb",
         "airbnb-typescript",
         "prettier",
@@ -27,6 +28,8 @@ module.exports = {
     rules: {
         "prettier/prettier": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
-        "no-param-reassign": "warn"
+        "no-param-reassign": "warn",
+        "react/jsx-props-no-spreading": "warn",
+        "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }]
     }
 }
