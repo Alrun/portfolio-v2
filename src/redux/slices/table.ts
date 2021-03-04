@@ -13,7 +13,8 @@ export interface TableState {
     sort: any;
     items: any; // TODO Add types for items
     groupOpen: string[];
-    hiddenCols: string[];
+    hiddenColumns: string[];
+    fixedColumns: string[];
     pinned: string[];
     loading: boolean;
     error: string;
@@ -89,7 +90,8 @@ const initialState: TableState = {
         by: 'coin',
         order: 'desc'
     },
-    hiddenCols: [],
+    hiddenColumns: [],
+    fixedColumns: ['1'],
     items: [],
     groupOpen: [],
     pinned: [],
@@ -122,6 +124,10 @@ export const table = createSlice({
             //     // @ts-ignore
             //     // state.columns[`${item.id}`].order = item.order;
             // });
+        },
+        setData: (state, { payload }: PayloadAction<any>) => {
+            // eslint-disable-next-line no-param-reassign
+            state.items = payload.items;
         }
         // ,// increment: (state) => {
         //     // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -147,7 +153,7 @@ export const table = createSlice({
     }
 });
 
-export const { reorder } = table.actions;
+export const { reorder, setData } = table.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

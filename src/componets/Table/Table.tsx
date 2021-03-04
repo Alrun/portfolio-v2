@@ -6,22 +6,13 @@ import classes from './Table.module.scss';
 import TableHead from '../TableHead/TableHead';
 import TableBody from '../TableBody/TableBody';
 import { tableDataSuccess } from '../../__mock__/tableDataMock';
-import { reorder, tableSelector } from '../../redux/slices/table';
+import { reorder, setData, tableSelector } from '../../redux/slices/table';
 import useScroll from '../../hooks/useScroll';
-
-const tableBodyData = {
-    data: JSON.parse(tableDataSuccess).data,
-    isLoading: false
-};
-
-const TableScrollBar = ({ width }: any) => (
-    <div className={classes.scrollBar}>
-        <div className={classes.scrollBarInner} style={{ width: `${width}px` }} />
-    </div>
-);
+import TableRow from '../TableRow/TableRow';
+import TableCell from '../TableCell/TableCell';
 
 export default function Table() {
-    const { columns, sort, items, groupOpen, loading, error } = useSelector(tableSelector);
+    const { columns, sort, items, groupOpen, fixedColumns, loading, error } = useSelector(tableSelector);
     const dispatch = useDispatch();
     const rendersCount = React.useRef<number>(0);
 
@@ -29,6 +20,10 @@ export default function Table() {
     const headRef = React.useRef<HTMLDivElement>(null);
     const bodyRef = React.useRef<HTMLDivElement>(null);
     const scrollRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        dispatch(setData(JSON.parse(tableDataSuccess).data));
+    }, [dispatch]);
 
     // const [width, setWidth] = React.useState<number>(0);
 
@@ -100,17 +95,26 @@ export default function Table() {
                 <div ref={headRef} className={classes.head}>
                     <TableHead columns={columns} handleResize={handleResize} handleReorder={handleReorder} />
                 </div>
+
                 <div ref={bodyRef} className={classes.body}>
                     <div className={classes.bodyWrapper}>
-                        <TableBody data={tableBodyData.data} columns={columns} isLoading={tableBodyData.isLoading} />
+                        <TableBody
+                            items={items}
+                            columns={columns}
+                            loading={loading}
+                            error={error}
+                            fixedColumns={fixedColumns}
+                        />
                     </div>
                 </div>
+
                 {/* <TableScrollBar width={width} /> */}
                 <div className={classes.footer}>
                     <div>0000</div>
                     <div ref={scrollRef} className={classes.footerWrapper}>
                         <div>1111</div>
-                        <div className={classes.scrollBar}
+                        <div
+                            className={classes.scrollBar}
                             style={{
                                 width: `${columns.reduce((acc, cur) => acc + cur.width, 0)}px`
                             }}

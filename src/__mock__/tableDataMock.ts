@@ -23,7 +23,7 @@ export const tableDataSuccess = JSON.stringify({
                 date: 11,
                 group: [
                     {
-                        id: 'bitcoin',
+                        id: 'bitcoin-1',
                         symbol: 'BTC',
                         buyPrice: 0,
                         quantity: 0,
@@ -33,7 +33,7 @@ export const tableDataSuccess = JSON.stringify({
                         date: 0
                     },
                     {
-                        id: 'bitcoin',
+                        id: 'bitcoin-2',
                         symbol: 'BTC',
                         buyPrice: '',
                         quantity: '',
@@ -96,7 +96,7 @@ export const tableDataSuccess = JSON.stringify({
             {id: 'Litecoin', title: 'Litecoin', symbol: 'LTC', image: '', quantity: 1, value: 2, price_buy: 3, price_current: 4, currency_buy: '', change: 5, fee_buy: 6, fee_sell: 7, sold: 8, gain: 9, quota: 10, wallet: '', date: 11 },
             {id: 'Litecoin', title: 'Litecoin', symbol: 'LTC', image: '', quantity: 1, value: 2, price_buy: 3, price_current: 4, currency_buy: '', change: 5, fee_buy: 6, fee_sell: 7, sold: 8, gain: 9, quota: 10, wallet: '', date: 11 },
             {id: 'Litecoin', title: 'Litecoin', symbol: 'LTC', image: '', quantity: 1, value: 2, price_buy: 3, price_current: 4, currency_buy: '', change: 5, fee_buy: 6, fee_sell: 7, sold: 8, gain: 9, quota: 10, wallet: '', date: 11 },
-            {id: 'Litecoin', title: 'Litecoin', symbol: 'LTC', image: '', quantity: 1, value: 2, price_buy: 3, price_current: 4, currency_buy: '', change: 5, fee_buy: 6, fee_sell: 7, sold: 8, gain: 9, quota: 10, wallet: '', date: 11 },
+            {id: 'Tether', title: 'Tether', symbol: 'USDT', image: '', quantity: 1, value: 2, price_buy: 3, price_current: 4, currency_buy: '', change: 5, fee_buy: 6, fee_sell: 7, sold: 8, gain: 9, quota: 10, wallet: '', date: 11 },
         ]
     }
 });

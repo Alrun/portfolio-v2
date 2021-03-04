@@ -18,12 +18,19 @@ import classes from './TableCell.module.scss';
 //     columns: any;
 // }
 
-export default function TableCell({title}: any) {
+export default function TableCell({col: { id, width, order}, addClasses, children }: any) {
     return (
-        <div className={classes.root}>
-            <div>
-                <span>{title}</span>
-            </div>
+        <div
+            data-col-id={id}
+            style={{
+                minWidth: width,
+                width,
+                maxWidth: width,
+                order
+            }}
+            className={classes.root}
+        >
+            {children}
         </div>
     );
 }
