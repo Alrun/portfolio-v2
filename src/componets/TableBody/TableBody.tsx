@@ -25,7 +25,9 @@ export default function TableBody({ columns, items, fixedColumns, loading, error
         <>
             {!!items.length && (
                 <>
-                     <TableFixedColumn columns={columns} items={items} fixedColumns={fixedColumns} />
+                    {fixedColumns.length && (
+                        <TableFixedColumn columns={columns} items={items} fixedColumns={fixedColumns} />
+                    )}
 
                     {items.map((item: any) =>
                         item.group?.length ? (

@@ -10,6 +10,7 @@ import { reorder, setData, tableSelector } from '../../redux/slices/table';
 import useScroll from '../../hooks/useScroll';
 import TableRow from '../TableRow/TableRow';
 import TableCell from '../TableCell/TableCell';
+import TableScrollBar from '../TableScrollBar/TableScrollBar';
 
 export default function Table() {
     const { columns, sort, items, groupOpen, fixedColumns, loading, error } = useSelector(tableSelector);
@@ -19,7 +20,7 @@ export default function Table() {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const headRef = React.useRef<HTMLDivElement>(null);
     const bodyRef = React.useRef<HTMLDivElement>(null);
-    const scrollRef = React.useRef<HTMLDivElement>(null);
+    const scrollRef = React.useRef<HTMLDivElement[]>([]);
 
     React.useEffect(() => {
         dispatch(setData(JSON.parse(tableDataSuccess).data));
@@ -48,6 +49,10 @@ export default function Table() {
         [dispatch]
     );
 
+    const setRef = (ref: any) => {
+        scrollRef.current.push(ref);
+    }
+
     const handleScrollEvent = (e: any) => {
         const headWrapper = headRef.current?.children[0] as HTMLElement;
         const body = bodyRef.current as HTMLElement;
@@ -62,16 +67,20 @@ export default function Table() {
 
     React.useLayoutEffect(() => {
         const body = bodyRef.current;
-        const scroll = scrollRef.current;
+        const scroll = scrollRef.current[0];
 
-        if ('ontouchstart' in document.documentElement) {
-            if (body) {
-                body.style.overflow = 'auto';
-                body.addEventListener('scroll', handleScrollEvent, { passive: true });
+
+            if ('ontouchstart' in document.documentElement) {
+                if (body) {
+                    body.style.overflow = 'auto';
+                    body.addEventListener('scroll', handleScrollEvent, { passive: true });
+                }
+            } else if (scroll) {
+                scroll.addEventListener('scroll', handleScrollEvent, { passive: true });
             }
-        } else if (scroll) {
-            scroll.addEventListener('scroll', handleScrollEvent, { passive: true });
-        }
+
+
+
 
         return (): void => {
             if ('ontouchstart' in document.documentElement) {
@@ -107,20 +116,28 @@ export default function Table() {
                         />
                     </div>
                 </div>
+                <div className={classes.footer}>
+                    <TableScrollBar columns={columns} setRef={setRef} />
+                </div>
 
                 {/* <TableScrollBar width={width} /> */}
-                <div className={classes.footer}>
-                    <div>0000</div>
-                    <div ref={scrollRef} className={classes.footerWrapper}>
-                        <div>1111</div>
-                        <div
-                            className={classes.scrollBar}
-                            style={{
-                                width: `${columns.reduce((acc, cur) => acc + cur.width, 0)}px`
-                            }}
-                        />
-                    </div>
-                </div>
+                {/* <div className={classes.footer}> */}
+                {/*    <div>0000</div> */}
+                {/*    <div ref={scrollRef} className={classes.footerWrapper}> */}
+                {/*        <div>1111</div> */}
+                {/*        <div */}
+                {/*            className={classes.scrollBar} */}
+                {/*            style={{ */}
+                {/*                width: `${columns.reduce((acc, cur) => { */}
+                {/*                    if (!cur.isHidden && !cur.isFixed) { */}
+                {/*                        return acc + cur.width; */}
+                {/*                    } */}
+                {/*                    return acc; */}
+                {/*                }, 350)}px` */}
+                {/*            }} */}
+                {/*        /> */}
+                {/*    </div> */}
+                {/* </div> */}
             </div>
             {/* eslint-disable-next-line no-plusplus */}
             <b>Table RENDER COUNT: {++rendersCount.current}</b>

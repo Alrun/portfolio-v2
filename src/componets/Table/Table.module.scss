@@ -6,11 +6,13 @@
     top: 0;
     position: sticky;
     z-index: 1;
+    padding-left: 350px;
 }
 
 .body {
     padding-bottom: 1px;
     overflow: hidden;
+    padding-left: 350px;
     //scroll-snap-type: x mandatory;
     //-webkit-overflow-scrolling: touch;
 }
@@ -45,18 +47,18 @@
     //height: 20px;
 }
 
-.footerWrapper {
-    overflow-y: hidden;
-    //-webkit-overflow-scrolling: touch;
-    height: 100%;
-    width: 100%;
-    background: pink;
-}
-
-.scrollBar {
-    background: violet;
-    height: 1px;
-}
+//.footerWrapper {
+//    overflow-y: hidden;
+//    //-webkit-overflow-scrolling: touch;
+//    height: 100%;
+//    width: 100%;
+//    background: pink;
+//}
+//
+//.scrollBar {
+//    background: violet;
+//    height: 1px;
+//}
 
 
 

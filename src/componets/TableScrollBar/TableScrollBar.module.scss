@@ -1,0 +1,19 @@
+.root {
+    //outline: 1px solid pink;
+}
+
+.footerWrapper {
+    overflow-y: hidden;
+    //-webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    background: pink;
+}
+
+.scrollBar {
+    background: violet;
+    height: 1px;
+}
+
+
+

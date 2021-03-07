@@ -95,13 +95,17 @@ export const tableCellsGroup = (columns: any, item: any) => [
 ];
 
 export default function TableRow({ item, columns, children, isGroup }: any) {
-
-    console.log(isGroup);
-    return children || isGroup ? (
-        <div className={classes.root}>{tableCellsGroup(columns, item).map((cell: any) => cell)}</div>
+    const defineGroup = isGroup ? (
+        <div className={classes.root}>
+            {tableCellsGroup(columns, item).filter((cell) => !cell.props.col.isFixed && !cell.props.col.isHidden)}
+        </div>
     ) : (
-        <div className={classes.root}>{tableCells(columns, item).map((cell: any) => cell)}</div>
+        <div className={classes.root}>
+            {tableCells(columns, item).filter((cell) => !cell.props.col.isFixed && !cell.props.col.isHidden)}
+        </div>
     );
+
+    return children ? <div className={classes.root}>{children}</div> : defineGroup;
 }
 // <div className={classes.root}>
 //     {columns &&

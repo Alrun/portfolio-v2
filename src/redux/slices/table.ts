@@ -2,13 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface TableState {
     columns: {
-        id: string;
         width: number;
         order: number;
         head: {
-            id: string;
+            id: string; // TODO Add nonEmptyString type
             title: string;
         }[];
+        isHidden?: boolean;
+        isFixed?: boolean;
     }[];
     sort: any;
     items: any; // TODO Add types for items
@@ -23,31 +24,30 @@ export interface TableState {
 const initialState: TableState = {
     columns: [
         {
-            id: '1',
             width: 200,
             order: 1,
-            head: [{ id: 'coin', title: 'Coin' }]
+            head: [{ id: 'coin', title: 'Coin' }],
+            isFixed: true
         },
         {
-            id: '2',
             width: 150,
             order: 2,
             head: [
                 { id: 'quantity', title: 'Quantity' },
                 { id: 'current_value', title: 'Current Value Value' }
-            ]
+            ],
+            // isFixed: true
         },
         {
-            id: '3',
             width: 150,
             order: 3,
             head: [
                 { id: 'buy_price', title: 'Buy Price' },
                 { id: 'current_price', title: 'Current Price' }
-            ]
+            ],
+            isFixed: true
         },
         {
-            id: '4',
             width: 150,
             order: 4,
             head: [
@@ -56,7 +56,6 @@ const initialState: TableState = {
             ]
         },
         {
-            id: '5',
             width: 150,
             order: 5,
             head: [
@@ -65,25 +64,25 @@ const initialState: TableState = {
             ]
         },
         {
-            id: '6',
             width: 150,
             order: 6,
             head: [{ id: 'quota', title: 'Quota' }]
         },
         {
-            id: '7',
             width: 150,
             order: 7,
             head: [
                 { id: 'wallet', title: 'Wallet' },
                 { id: 'date', title: 'Buy Date' }
             ]
+            // isHidden: true
         },
         {
-            id: '8',
             width: 150,
             order: 8,
-            head: [{ id: '', title: '' }]
+            head: [{ id: 'info', title: '' }],
+            // isHidden: true
+            // isFixed: true
         }
     ],
     sort: {
@@ -91,7 +90,7 @@ const initialState: TableState = {
         order: 'desc'
     },
     hiddenColumns: [],
-    fixedColumns: ['1'],
+    fixedColumns: ['quantity', 'buy_price'],
     items: [],
     groupOpen: [],
     pinned: [],
@@ -114,8 +113,12 @@ export const table = createSlice({
             // console.log('redux ', payload);
 
             state.columns.forEach((item) => {
-                // eslint-disable-next-line no-param-reassign
-                item.order = payload.filter((el: { id: string }) => el.id === item.id)[0].order;
+                const currentCol = payload.filter((el: { id: string }) => el.id === item.head[0].id);
+
+                if (currentCol.length) {
+                    // eslint-disable-next-line no-param-reassign
+                    item.order = currentCol[0].order;
+                }
             });
 
             // eslint-disable-next-line no-return-assign

@@ -6,6 +6,7 @@ import dots from '../../assets/icons/dots-square.svg';
 import classes from './TableHead.module.scss';
 import useDraggable from '../../hooks/useDraggable';
 import useScroll from '../../hooks/useScroll';
+import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
 
 export interface TableHeadProps {
     // data: {
@@ -244,7 +245,7 @@ export default function TableHead({ handleResize, handleReorder, columns }: Tabl
                         order: elOrder
                     };
                 });
-
+                console.log(defineOrders);
                 handleReorder(defineOrders);
             }
 
@@ -254,58 +255,117 @@ export default function TableHead({ handleResize, handleReorder, columns }: Tabl
         // return () => console.log(111);
     }, [drag, drag.status, drag.deltaX, handleReorder]);
 
+    const defineColumns = (cols: any) => cols.filter((col: any) => !col.isFixed && !col.isHidden);
+    const defineFixedColumns = (cols: any) => cols.filter((col: any) => col.isFixed && !col.isHidden);
+
     return (
         // <div ref={rootRef} className={classes.root}>
         <div ref={rootRef} className={classes.wrapper}>
+            {columns && (
+                <>
+                    <div className={classes.fixed} style={{ height: rootRef.current?.offsetHeight }}>
+                        {defineFixedColumns(columns).map((item: any) => (
+                            <div
+                                // ref={addColumnRef}
+                                data-col-id={item.head[0].id}
+                                data-draggable="true"
+                                className={classes.col}
+                                key={item.head[0].id}
+                                style={{
+                                    minWidth: item.width,
+                                    width: item.width,
+                                    maxWidth: item.width,
+                                    order: item.order
+                                }}
+                            >
+                                <div ref={addColumnRef} className={classes.reorder} aria-hidden="true" />
+
+                                <div className={classes.wrapper}>
+                                    <div className={classes.actions}>
+                                        <button className={classes.dropdown} type="button" aria-label="toggle-dropdown" />
+                                    </div>
+                                    <div className={classes.container}>
+                                        {item.head.map(
+                                            (el: any) =>
+                                                el.id && (
+                                                    <button
+                                                        data-button-id={el.id}
+                                                        className={classes.button}
+                                                        key={el.id}
+                                                        type="button"
+                                                    >
+                                                    <span className={classes.text}>
+                                                        {el.title} o={item.order}
+                                                    </span>
+                                                        {(el.id === 'current_value' || el.id === 'quota') && (
+                                                            <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>
+                                                        )}
+                                                    </button>
+                                                )
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                                <div ref={addResizeRef} className={classes.resizer} aria-hidden="true" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* {fixedColumns.length && ( */}
+                    {/*    <TableFixedHead columns={columns} items={items} fixedColumns={fixedColumns} /> */}
+                    {/* )} */}
+
+                    {defineColumns(columns).map((item: any) => (
+                        <div
+                            // ref={addColumnRef}
+                            data-col-id={item.head[0].id}
+                            data-draggable="true"
+                            className={classes.col}
+                            key={item.head[0].id}
+                            style={{
+                                minWidth: item.width,
+                                width: item.width,
+                                maxWidth: item.width,
+                                order: item.order
+                            }}
+                        >
+                            <div ref={addColumnRef} className={classes.reorder} aria-hidden="true" />
+
+                            <div className={classes.wrapper}>
+                                <div className={classes.actions}>
+                                    <button className={classes.dropdown} type="button" aria-label="toggle-dropdown" />
+                                </div>
+                                <div className={classes.container}>
+                                    {item.head.map(
+                                        (el: any) =>
+                                            el.id && (
+                                                <button
+                                                    data-button-id={el.id}
+                                                    className={classes.button}
+                                                    key={el.id}
+                                                    type="button"
+                                                >
+                                                    <span className={classes.text}>
+                                                        {el.title} o={item.order}
+                                                    </span>
+                                                    {(el.id === 'current_value' || el.id === 'quota') && (
+                                                        <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>
+                                                    )}
+                                                </button>
+                                            )
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                            <div ref={addResizeRef} className={classes.resizer} aria-hidden="true" />
+                        </div>
+                    ))}
+                </>
+            )}
             {/* eslint-disable-next-line no-plusplus */}
             <b style={{ position: 'absolute', top: '80px' }}>Table Head RENDER COUNT: {++rendersCount.current}</b>
-            {columns &&
-                columns.map((item: any) => (
-                    <div
-                        // ref={addColumnRef}
-                        data-col-id={item.id}
-                        data-draggable="true"
-                        className={classes.col}
-                        key={item.id}
-                        style={{
-                            minWidth: item.width,
-                            width: item.width,
-                            maxWidth: item.width,
-                            order: item.order
-                        }}
-                    >
-                        <div ref={addColumnRef} className={classes.reorder} aria-hidden="true" />
-
-                        <div className={classes.wrapper}>
-                            <div className={classes.actions}>
-                                <button className={classes.dropdown} type="button" aria-label="toggle-dropdown" />
-                            </div>
-                            <div className={classes.container}>
-                                {item.head.map(
-                                    (el: any) =>
-                                        el.id && (
-                                            <button
-                                                data-button-id={el.id}
-                                                className={classes.button}
-                                                key={el.id}
-                                                type="button"
-                                            >
-                                                <span className={classes.text}>
-                                                    {el.title} o={item.order}
-                                                </span>
-                                                {(el.id === 'current_value' || el.id === 'quota') && (
-                                                    <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>
-                                                )}
-                                            </button>
-                                        )
-                                )}
-                            </div>
-                        </div>
-
-                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                        <div ref={addResizeRef} className={classes.resizer} aria-hidden="true" />
-                    </div>
-                ))}
         </div>
         // </div>
     );

@@ -24,6 +24,12 @@
     outline: 1px solid #0a608b;
 }
 
+.fixed {
+    position: absolute;
+    left: 0;
+    display: flex;
+}
+
 .wrapper {
     display: flex;
     height: 100%;

@@ -18,10 +18,10 @@ import classes from './TableCell.module.scss';
 //     columns: any;
 // }
 
-export default function TableCell({col: { id, width, order}, addClasses, children }: any) {
+export default function TableCell({col: { head, width, order}, addClasses, children }: any) {
     return (
         <div
-            data-col-id={id}
+            data-col-id={head[0].id}
             style={{
                 minWidth: width,
                 width,
