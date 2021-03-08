@@ -18,35 +18,53 @@ export interface TableBodyProps {
     error: string;
 }
 
-export default function TableBody({ columns, items, fixedColumns, loading, error }: any) {
-    const rendersCount = React.useRef<number>(0);
+const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
+    ({ columns, items, loading, error }: TableBodyProps, ref) => {
+        const rendersCount = React.useRef<number>(0);
 
-    return (
-        <>
-            {!!items.length && (
-                <>
-                    {fixedColumns.length && (
-                        <TableFixedColumn columns={columns} items={items} fixedColumns={fixedColumns} />
-                    )}
+        const defineFixedColumns = columns.filter((col: any) => col.isFixed && !col.isHidden);
 
-                    {items.map((item: any) =>
-                        item.group?.length ? (
-                            <>
-                                <TableRow key={item.id} item={item} columns={columns} />
-                                <div className={classes.group}>
-                                    {item.group.map((groupItem: any) => (
-                                        <TableRow key={groupItem.id} item={groupItem} columns={columns} isGroup />
-                                    ))}
-                                </div>
-                            </>
-                        ) : (
-                            <TableRow key={item.id} item={item} columns={columns} />
-                        )
+        const padding = defineFixedColumns.reduce((acc: any, cur: any) => {
+            if (!cur.isHidden) {
+                return acc + cur.width;
+            }
+            return acc;
+        }, 0);
+
+        return (
+            <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
+                <div className={classes.wrapper}>
+                    {!!items.length && (
+                        <>
+                            {defineFixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
+
+                            {items.map((item: any) =>
+                                item.group?.length ? (
+                                    <>
+                                        <TableRow key={item.id} item={item} columns={columns} />
+                                        <div className={classes.group}>
+                                            {item.group.map((groupItem: any) => (
+                                                <TableRow
+                                                    key={groupItem.id}
+                                                    item={groupItem}
+                                                    columns={columns}
+                                                    isGroup
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <TableRow key={item.id} item={item} columns={columns} />
+                                )
+                            )}
+                        </>
                     )}
-                </>
-            )}
-            {/* eslint-disable-next-line no-plusplus */}
-            <b>Table Body RENDER COUNT: {++rendersCount.current}</b>
-        </>
-    );
-}
+                    {/* eslint-disable-next-line no-plusplus */}
+                    <b>Table Body RENDER COUNT: {++rendersCount.current}</b>
+                </div>
+            </div>
+        );
+    }
+);
+
+export default TableBody;

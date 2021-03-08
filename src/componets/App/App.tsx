@@ -2,7 +2,6 @@ import React from 'react';
 // import Btn from '@material-ui/core/Button';
 // import logo from '../../assets/logo.svg';
 // import { Button } from '../../ui/Button/Button';
-import Counter from '../counter/Counter';
 import Table from '../Table/Table';
 
 import classes from './App.module.scss';
@@ -12,7 +11,6 @@ function App() {
         <div className={classes.app}>
             <div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div>
             <Table />
-            <Counter />
             <div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div>
             <div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div>
             <div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div><div>1</div>

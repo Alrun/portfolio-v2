@@ -1,8 +1,10 @@
 .root {
-    //outline: 1px solid pink;
+    bottom: 0;
+    position: sticky;
+    z-index: 1;
 }
 
-.footerWrapper {
+.wrapper {
     overflow-y: hidden;
     //-webkit-overflow-scrolling: touch;
     height: 100%;

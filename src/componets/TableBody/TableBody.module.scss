@@ -1,3 +1,14 @@
+.root {
+    padding-bottom: 1px;
+    overflow: hidden;
+    //scroll-snap-type: x mandatory;
+    //-webkit-overflow-scrolling: touch;
+}
+
+.wrapper {
+
+}
+
 .table {
     //outline: 1px solid pink;
     //padding-bottom: 1px;
@@ -8,5 +19,6 @@
 .group div {
     background: yellow;
 }
+
 
 

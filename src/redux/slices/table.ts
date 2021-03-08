@@ -1,21 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface TableState {
-    columns: {
-        width: number;
-        order: number;
-        head: {
-            id: string; // TODO Add nonEmptyString type
-            title: string;
-        }[];
-        isHidden?: boolean;
-        isFixed?: boolean;
+export interface TableColumnsInterface {
+    width: number;
+    order: number;
+    head: {
+        id: string; // TODO Add nonEmptyString type
+        title: string;
     }[];
+    isHidden?: boolean;
+    isFixed?: boolean;
+}
+
+export interface TableState {
+    columns: TableColumnsInterface[];
     sort: any;
     items: any; // TODO Add types for items
     groupOpen: string[];
-    hiddenColumns: string[];
-    fixedColumns: string[];
     pinned: string[];
     loading: boolean;
     error: string;
@@ -45,7 +45,8 @@ const initialState: TableState = {
                 { id: 'buy_price', title: 'Buy Price' },
                 { id: 'current_price', title: 'Current Price' }
             ],
-            isFixed: true
+            isFixed: true,
+            isHidden: true
         },
         {
             width: 150,
@@ -89,8 +90,6 @@ const initialState: TableState = {
         by: 'coin',
         order: 'desc'
     },
-    hiddenColumns: [],
-    fixedColumns: ['quantity', 'buy_price'],
     items: [],
     groupOpen: [],
     pinned: [],

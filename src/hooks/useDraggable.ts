@@ -78,6 +78,9 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
                 }
 
                 if (el) {
+                    /**
+                     * Hide draggable element for define target element
+                     */
                     el.style.visibility = 'visible';
 
                     setState({
