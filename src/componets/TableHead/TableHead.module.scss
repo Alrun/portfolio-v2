@@ -7,153 +7,23 @@
 .wrapper {
     display: flex;
     overflow: hidden;
-    //-webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
 }
 
-.col {
+.container {
     display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 2px 0;
-    //margin-right: -1px;
-    margin-bottom: 1px;
-    //user-select: none;
-    //touch-action:none; // prevents from scrolling while dragging on touch devices
-    //background: violet;
-    align-items: center;
-    outline: 1px solid #0a608b;
 }
 
 .fixed {
     position: absolute;
     left: 0;
     display: flex;
-}
-
-.wrapper {
-    display: flex;
     height: 100%;
-    width: 100%;
+    border-right: 1px solid #ccc;
 }
 
-.actions {
-    width: 40px;
-    display: flex;
-    align-items: center;
-}
-
-.dropdown {
-    width: 20px;
-    height: 20px;
-    background-image: url('../../assets/icons/dots-square.svg');
-    background-repeat: no-repeat;
-    margin-left: 20px;
-    border-radius: 50%;
-    border: none;
-
-    &:hover {
-        background-color: #ccc;
-    }
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 40px);
-}
-
-.button {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    padding: 0 15px;
-    width: 100%;
-    background: #fff;
-    justify-content: inherit;
-    font-weight: 500;
-    border: none;
-    user-select: none; // delete after styled buttons
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 13px;
-
-    &:hover {
-        color: #229abf;
-    }
-}
-
-.text {
-    overflow: hidden;
-    font-size: 10px;
-    text-overflow: ellipsis;
-}
-
-//.fixed {
-//    position: absolute;
-//    top: 0;
-//    bottom: 0;
-//    right: 0;
-//    left: 0;
-//    background: deepskyblue;
-//    cursor: col-resize;
-//    touch-action:none; // prevents from scrolling while dragging on touch devices
-//}
-
-.reorder {
-    position: absolute;
-    top: 0;
-    bottom: 50%;
-    left: -5px;
-    width: 20px;
-    //background: pink;
-    z-index: 100;
-    //outline: 1px solid red;
-    cursor: move;
-    touch-action: none; // prevents from scrolling while dragging on touch devices
-
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 25px;
-        background-image: url('../../assets/icons/dots-square.svg');
-        background-repeat: no-repeat;
-    }
-}
-
-.dots {
-    user-select: none;
-}
-
-.resizer {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: -10px;
-    width: 20px;
-    //outline: 1px solid purple;
-    background: yellow;
-    z-index: 10;
-    opacity: 0.15;
-    cursor: col-resize;
-    touch-action: none; // prevents from scrolling while dragging on touch devices
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        bottom: 10px;
-        left: 5px;
-        width: 2px;
-        background: #000;
-        //opacity: 0;
-    }
-
-    &:hover &::after {
-        opacity: 1;
-        outline: 1px solid red;
-    }
-}
 
 .overlay {
     position: absolute;
@@ -190,3 +60,4 @@
         left: -1px;
     }
 }
+

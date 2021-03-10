@@ -31,35 +31,33 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
             return acc;
         }, 0);
 
+        const fullWidth = columns.reduce((acc: any, cur: any) => {
+            if (!cur.isHidden && !cur.isFixed) {
+                return acc + cur.width;
+            }
+            return acc;
+        }, 0);
+
         return (
             <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
-                <div className={classes.wrapper}>
-                    {!!items.length && (
-                        <>
-                            {defineFixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
-
-                            {items.map((item: any) =>
-                                item.group?.length ? (
-                                    <>
-                                        <TableRow key={item.id} item={item} columns={columns} />
-                                        <div className={classes.group}>
-                                            {item.group.map((groupItem: any) => (
-                                                <TableRow
-                                                    key={groupItem.id}
-                                                    item={groupItem}
-                                                    columns={columns}
-                                                    isGroup
-                                                />
-                                            ))}
-                                        </div>
-                                    </>
-                                ) : (
+                <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
+                    {!!defineFixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
+                    {!!items.length &&
+                        items.map((item: any) =>
+                            item.group?.length ? (
+                                <div data-group="tt">
                                     <TableRow key={item.id} item={item} columns={columns} />
-                                )
-                            )}
-                        </>
-                    )}
-                    {/* eslint-disable-next-line no-plusplus */}
+                                    <div className={classes.group}>
+                                        {item.group.map((groupItem: any) => (
+                                            <TableRow key={groupItem.id} item={groupItem} columns={columns} isGroup />
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <TableRow key={item.id} item={item} columns={columns} />
+                            )
+                        )}
+                    ){/* eslint-disable-next-line no-plusplus */}
                     <b>Table Body RENDER COUNT: {++rendersCount.current}</b>
                 </div>
             </div>

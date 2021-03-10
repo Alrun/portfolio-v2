@@ -10,7 +10,8 @@ body {
     font-family: 'Proxima Nova', $font-family-sans-serif;
     background-color: $gray-lighter;
     color: $gray-darkest;
-    //overflow: auto;
+    min-width: 320px;
+    overflow-x: hidden;
     //position: relative;
 }
 

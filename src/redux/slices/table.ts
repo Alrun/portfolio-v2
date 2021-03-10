@@ -35,7 +35,7 @@ const initialState: TableState = {
             head: [
                 { id: 'quantity', title: 'Quantity' },
                 { id: 'current_value', title: 'Current Value Value' }
-            ],
+            ]
             // isFixed: true
         },
         {
@@ -45,8 +45,8 @@ const initialState: TableState = {
                 { id: 'buy_price', title: 'Buy Price' },
                 { id: 'current_price', title: 'Current Price' }
             ],
-            isFixed: true,
-            isHidden: true
+            // isFixed: true,
+            // isHidden: true
         },
         {
             width: 150,
@@ -81,7 +81,7 @@ const initialState: TableState = {
         {
             width: 150,
             order: 8,
-            head: [{ id: 'info', title: '' }],
+            head: [{ id: 'info', title: '' }]
             // isHidden: true
             // isFixed: true
         }
@@ -102,15 +102,6 @@ export const table = createSlice({
     initialState,
     reducers: {
         reorder: (state, { payload }: PayloadAction<any>) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            // state.columns[payload.targetEl.id].order = payload.dragEl.order;
-            // console.log(payload);
-
-            // console.log('redux ', payload);
-
             state.columns.forEach((item) => {
                 const currentCol = payload.filter((el: { id: string }) => el.id === item.head[0].id);
 
@@ -119,13 +110,10 @@ export const table = createSlice({
                     item.order = currentCol[0].order;
                 }
             });
-
-            // eslint-disable-next-line no-return-assign
-            // payload.forEach((item: any): void => {
-            //     console.log(state.columns);
-            //     // @ts-ignore
-            //     // state.columns[`${item.id}`].order = item.order;
-            // });
+        },
+        resize: (state, { payload }: PayloadAction<any>) => {
+            // eslint-disable-next-line no-param-reassign
+            state.columns.filter((col) => col.head[0].id === payload.id)[0].width = payload.width;
         },
         setData: (state, { payload }: PayloadAction<any>) => {
             // eslint-disable-next-line no-param-reassign
@@ -155,7 +143,7 @@ export const table = createSlice({
     }
 });
 
-export const { reorder, setData } = table.actions;
+export const { reorder, resize, setData } = table.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

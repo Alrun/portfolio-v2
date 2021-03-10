@@ -5,16 +5,17 @@
     //-webkit-overflow-scrolling: touch;
 }
 
-.wrapper {
-
+.container {
+    display: flex;
+    flex-direction: column;
 }
 
-.table {
+//.table {
     //outline: 1px solid pink;
     //padding-bottom: 1px;
     //overflow: auto;
     //scroll-snap-type: x mandatory;
-}
+//}
 
 .group div {
     background: yellow;

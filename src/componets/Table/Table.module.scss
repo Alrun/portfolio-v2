@@ -2,16 +2,15 @@
     //outline: 1px solid pink;
 }
 
-
-
-.bodyWrapper {
-    //-webkit-overflow-scrolling: touch;
-}
-
-.wrapper {
+.container {
     position: relative;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    border: 1px solid #ccc;
     //margin: 10em auto 30em;
     //max-width: 960px;
+    //-webkit-overflow-scrolling: touch;
     //overscroll-behavior: contain;
 }
 
@@ -26,21 +25,3 @@
 [data-col-id="info"] button {
     justify-content: center;
 }
-
-
-
-//.footerWrapper {
-//    overflow-y: hidden;
-//    //-webkit-overflow-scrolling: touch;
-//    height: 100%;
-//    width: 100%;
-//    background: pink;
-//}
-//
-//.scrollBar {
-//    background: violet;
-//    height: 1px;
-//}
-
-
-

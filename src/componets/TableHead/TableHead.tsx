@@ -7,6 +7,12 @@ import classes from './TableHead.module.scss';
 import useDraggable from '../../hooks/useDraggable';
 import useScroll from '../../hooks/useScroll';
 import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
+import TableHeadCell, { TableHeadRef } from '../TableHeadCell/TableHeadCell';
+
+const colWidth: { [key: string]: number } = {
+    min: 50,
+    max: 500
+};
 
 export interface TableHeadProps {
     // data: {
@@ -19,55 +25,29 @@ export interface TableHeadProps {
     handleReorder: ({ dragEl, targetEl }: any) => void;
     handleResize: (width: any, cursor: any) => void;
     columns: any;
-    rootRef: any;
+    tableRef: any;
 }
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
-    ({ handleResize, handleReorder, columns, rootRef }: TableHeadProps, ref) => {
-        const wrapperRef = React.useRef<HTMLDivElement>(null);
-        const columnItemsRef = React.useRef<HTMLElement[]>([]);
-        const resizeItemsRef = React.useRef<HTMLElement[]>([]);
+    ({ handleResize, handleReorder, columns, tableRef }: TableHeadProps, ref) => {
+        const rootRef = React.useRef<HTMLDivElement>(null);
+        const ttRef = React.useRef<any[]>([]);
+        const columnItemsRef = React.useRef<HTMLDivElement[]>([]);
+        const resizeItemsRef = React.useRef<HTMLDivElement[]>([]);
+        // const columnItemsRef = React.useRef<HTMLElement[]>([]);
         const rendersCount = React.useRef(0);
 
-        const addColumnRef = React.useCallback((node) => {
-            if (node) {
-                columnItemsRef.current.push(node);
+        const addColumnRefs = React.useCallback((node: TableHeadRef | null) => {
+            // console.log(node);
+            if (node && !ttRef.current?.includes(node.cellRef.current?.dataset.colId)) {
+                ttRef.current.push(node.cellRef.current?.dataset.colId);
+                columnItemsRef.current.push(node.reorderRef.current as HTMLDivElement);
+                resizeItemsRef.current.push(node.resizeRef.current as HTMLDivElement);
             }
         }, []);
-
-        const addResizeRef = React.useCallback((node) => {
-            if (node) {
-                resizeItemsRef.current.push(node);
-            }
-        }, []);
-
-        // React.useEffect(() => {
-        //     const parentEl = rootRef.current?.parentNode as HTMLElement;
-        //
-        //     console.log(parentEl.getBoundingClientRect().top, scroll.position.y);
-        //
-        //     // window.requestAnimationFrame(() => {
-        //         if (parentEl.getBoundingClientRect().top < 0) {
-        //             // if (parentEl.getBoundingClientRect()) {
-        //             // @ts-ignore
-        //             rootRef.current.style.position = 'fixed'
-        //             // rootRef.current.style.top = `${Math.abs(parentEl.getBoundingClientRect().top)}px`
-        //             // console.log(parentEl.getBoundingClientRect());
-        //         } else {
-        //             // @ts-ignore
-        //             rootRef.current.style.position = 'relative'
-        //         }
-        //     // });
-        //
-        //
-        // }, [scroll]);
-
-        // React.useEffect(() => {
-        //     handleSetWidth(rootRef.current?.scrollWidth);
-        // }, [handleSetWidth]);
 
         const drag = useDraggable(columnItemsRef, '[data-draggable="true"]');
-        const resize = useDraggable(resizeItemsRef, `.${classes.resizer}`);
+        const resize = useDraggable(resizeItemsRef, `.${resizeItemsRef.current[0]?.className}`);
 
         React.useEffect(() => {
             if (resize.dragEl && resize.status === 'start') {
@@ -80,49 +60,47 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
 
                 if (id) {
                     const initialWidth = columns.filter((col: any) => col.head[0].id === id)[0].width;
-                    const cells = rootRef.current.querySelectorAll(`[data-col-id=${id}]`);
+                    const cells = tableRef.current.querySelectorAll(`[data-col-id=${id}]`);
+
+                    console.log(resize.deltaX);
 
                     cells.forEach((item: any) => {
-                        item.style.width = `${initialWidth + resize.deltaX}px`;
-                        item.style.minWidth = `${initialWidth + resize.deltaX}px`;
-                        item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
-                            });
-
-                    // console.log(cells);
-                    // const wrapperRef.current?.parentNode
-                    //     ?.querySelectorAll<HTMLElement>(`[data-col-id="${drag.dragEl.dataset.colId}"]`)
-                    //     .forEach((item) => {
-                    //         item.style.backgroundColor = '#ececec';
-                    //     });
-
-                    // console.log(columns.filter((col: any) => col.head[0].id === id));
-
-                    // const {width} = col.getBoundingClientRect();
-
-                    // col.getBoundingClientRect().width = 500
-                    // currentCol.style.width = `${initialWidth + resize.deltaX}px`;
-                    // currentCol.style.minWidth = `${initialWidth + resize.deltaX}px`;
-                    // currentCol.style.maxWidth = `${initialWidth + resize.deltaX}px`;
+                        if (
+                            initialWidth + resize.deltaX > colWidth.min &&
+                            initialWidth + resize.deltaX < colWidth.max
+                        ) {
+                            item.style.width = `${initialWidth + resize.deltaX}px`;
+                            item.style.minWidth = `${initialWidth + resize.deltaX}px`;
+                            item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
+                        }
+                    });
                 }
 
                 // console.log('move', resize.deltaX);
             }
 
-            if (resize.status === 'stop') {
+            if (resize.dragEl && resize.status === 'stop') {
+                const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
+                const id: string | undefined = currentCol?.dataset.colId;
+
+                if (currentCol && id) {
+                    handleResize(id, currentCol.offsetWidth);
+                }
+
                 console.log('stop ', resize);
             }
-        }, [resize]);
+        }, [columns, handleResize, resize, rootRef, tableRef]);
 
         React.useEffect(() => {
             if (drag.dragEl && drag.status === 'start') {
                 /**
                  * Highlight reorder column cells
                  */
-                wrapperRef.current?.parentNode
-                    ?.querySelectorAll<HTMLElement>(`[data-col-id="${drag.dragEl.dataset.colId}"]`)
-                    .forEach((item) => {
-                        item.style.backgroundColor = '#ececec';
-                    });
+                tableRef.current
+                    ?.querySelectorAll(`[data-col-id="${drag.dragEl.dataset.colId}"]`)
+                    .forEach((item: any) => {
+                    item.style.backgroundColor = '#ececec';
+                });
                 /**
                  * Create reorder overlay
                  */
@@ -131,8 +109,8 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
 
                     orderOverlay.classList.add(classes.overlay);
 
-                    if (wrapperRef && wrapperRef.current && wrapperRef.current.parentNode) {
-                        wrapperRef.current.parentNode.append(orderOverlay);
+                    if (rootRef && rootRef.current && rootRef.current.parentNode) {
+                        rootRef.current.parentNode.append(orderOverlay);
                     }
                 }
                 /**
@@ -149,30 +127,37 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             }
 
             if (drag.dragEl && drag.status === 'move') {
-                const cols: NodeListOf<HTMLElement> | undefined = wrapperRef.current?.parentNode?.querySelectorAll(
-                    `[data-col-id]`
+                // const cols: NodeListOf<HTMLDivElement> | undefined = tableRef.current?.querySelectorAll(
+                //     `[data-col-id]`
+                // );
+                // const draggedCol = [...cols].filter((item) => item.dataset.colId === drag.dragEl?.dataset.colId)[0];
+                const draggedCol: HTMLDivElement | undefined | null = rootRef.current?.querySelector(
+                    `[data-col-id=${drag.dragEl?.dataset.colId}]`
                 );
+                const bodyCols = tableRef.current?.querySelectorAll(`[data-col-id]:not([data-draggable])`);
 
-                if (cols) {
-                    const bodyCols = [...cols].filter((item) => !item.dataset.draggable);
-                    const draggedCol = [...cols].filter((item) => item.dataset.colId === drag.dragEl?.dataset.colId)[0];
-                    const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
+                if (draggedCol) {
                     /**
                      * Apply drag effect
                      */
                     draggedCol.style.left = `${drag.deltaX}px`;
                     draggedCol.style.zIndex = '100';
                     draggedCol.style.opacity = '0.5';
+
+                    const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
                     /**
                      * Move dragged column overlay
                      */
                     if (orderOverlay) {
                         orderOverlay.style.transform = `translate(${drag.deltaX}px, 0px)`;
                     }
+                }
+
+                if (bodyCols) {
                     /**
                      * Add class to highlight target column when dragging to the right or left
                      */
-                    bodyCols.forEach((item) => {
+                    bodyCols.forEach((item: any) => {
                         const correction = -1; // Border corrected delta
 
                         if (
@@ -210,12 +195,10 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             }
 
             if (drag.status === 'stop') {
-                const cols: NodeListOf<HTMLElement> | undefined = wrapperRef.current?.parentNode?.querySelectorAll(
-                    `[data-col-id]`
+                const cols: NodeListOf<HTMLElement> | undefined = tableRef.current?.querySelectorAll(`[data-col-id]`);
+                const orderOverlay: NodeListOf<HTMLElement> | undefined = tableRef.current?.querySelectorAll(
+                    `.${classes.overlay}`
                 );
-                const orderOverlay:
-                    | NodeListOf<HTMLElement>
-                    | undefined = wrapperRef.current?.parentNode?.querySelectorAll(`.${classes.overlay}`);
 
                 if (cols) {
                     cols.forEach((item) => {
@@ -301,7 +284,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             }
 
             // return () => console.log(111);
-        }, [drag, drag.status, drag.deltaX, handleReorder]);
+        }, [drag, drag.status, drag.deltaX, handleReorder, tableRef]);
 
         const defineColumns = (cols: any) => cols.filter((col: any) => !col.isFixed && !col.isHidden);
         const defineFixedColumns = (cols: any) => cols.filter((col: any) => col.isFixed && !col.isHidden);
@@ -313,126 +296,38 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             return acc;
         }, 0);
 
+        const fullWidth = columns.reduce((acc: any, cur: any) => {
+            if (!cur.isHidden && !cur.isFixed) {
+                return acc + cur.width;
+            }
+            return acc;
+        }, 0);
+
         return (
-            <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
-                <div ref={wrapperRef} className={classes.wrapper}>
-                    {columns && (
-                        <>
-                            <div className={classes.fixed} style={{ height: wrapperRef.current?.offsetHeight }}>
-                                {defineFixedColumns(columns).map((item: any) => (
-                                    <div
-                                        // ref={addColumnRef}
-                                        data-col-id={item.head[0].id}
-                                        data-draggable="true"
-                                        data-resizable="true"
-                                        className={classes.col}
-                                        key={item.head[0].id}
-                                        style={{
-                                            minWidth: item.width,
-                                            width: item.width,
-                                            maxWidth: item.width,
-                                            order: item.order
-                                        }}
-                                    >
-                                        <div ref={addColumnRef} className={classes.reorder} aria-hidden="true" />
+            <div ref={rootRef} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
+                <div ref={ref} className={classes.wrapper}>
+                    <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
+                        {columns && (
+                            <>
+                                {/* <div className={classes.fixed}> */}
+                                {/*    {defineFixedColumns(columns).map((item: any) => ( */}
+                                {/*        <TableHeadCell */}
+                                {/*            item={item} */}
+                                {/*            ref={tt} */}
+                                {/*        /> */}
+                                {/*    ))} */}
+                                {/* </div> */}
 
-                                        <div className={classes.wrapper}>
-                                            <div className={classes.actions}>
-                                                <button
-                                                    className={classes.dropdown}
-                                                    type="button"
-                                                    aria-label="toggle-dropdown"
-                                                />
-                                            </div>
-                                            <div className={classes.container}>
-                                                {item.head.map(
-                                                    (el: any) =>
-                                                        el.id && (
-                                                            <button
-                                                                data-button-id={el.id}
-                                                                className={classes.button}
-                                                                key={el.id}
-                                                                type="button"
-                                                            >
-                                                                <span className={classes.text}>
-                                                                    {el.title} o={item.order}
-                                                                </span>
-                                                                {(el.id === 'current_value' || el.id === 'quota') && (
-                                                                    <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>
-                                                                )}
-                                                            </button>
-                                                        )
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                                        <div ref={addResizeRef} className={classes.resizer} aria-hidden="true" />
-                                    </div>
+                                {defineColumns(columns).map((item: any) => (
+                                    <TableHeadCell item={item} ref={addColumnRefs} />
                                 ))}
-                            </div>
-
-                            {/* {fixedColumns.length && ( */}
-                            {/*    <TableFixedHead columns={columns} items={items} fixedColumns={fixedColumns} /> */}
-                            {/* )} */}
-
-                            {defineColumns(columns).map((item: any) => (
-                                <div
-                                    // ref={addColumnRef}
-                                    data-col-id={item.head[0].id}
-                                    data-draggable="true"
-                                    data-resizable="true"
-                                    className={classes.col}
-                                    key={item.head[0].id}
-                                    style={{
-                                        minWidth: item.width,
-                                        width: item.width,
-                                        maxWidth: item.width,
-                                        order: item.order
-                                    }}
-                                >
-                                    <div ref={addColumnRef} className={classes.reorder} aria-hidden="true" />
-
-                                    <div className={classes.wrapper}>
-                                        <div className={classes.actions}>
-                                            <button
-                                                className={classes.dropdown}
-                                                type="button"
-                                                aria-label="toggle-dropdown"
-                                            />
-                                        </div>
-                                        <div className={classes.container}>
-                                            {item.head.map(
-                                                (el: any) =>
-                                                    el.id && (
-                                                        <button
-                                                            data-button-id={el.id}
-                                                            className={classes.button}
-                                                            key={el.id}
-                                                            type="button"
-                                                        >
-                                                            <span className={classes.text}>
-                                                                {el.title} o={item.order}
-                                                            </span>
-                                                            {(el.id === 'current_value' || el.id === 'quota') && (
-                                                                <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>
-                                                            )}
-                                                        </button>
-                                                    )
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                                    <div ref={addResizeRef} className={classes.resizer} aria-hidden="true" />
-                                </div>
-                            ))}
-                        </>
-                    )}
-                    <b style={{ position: 'absolute', top: '80px' }}>
-                        {/* eslint-disable-next-line no-plusplus */}
-                        Table Head RENDER COUNT: {++rendersCount.current}
-                    </b>
+                            </>
+                        )}
+                        <b style={{ position: 'absolute', top: '80px' }}>
+                            {/* eslint-disable-next-line no-plusplus */}
+                            Table Head RENDER COUNT: {++rendersCount.current}
+                        </b>
+                    </div>
                 </div>
             </div>
         );
