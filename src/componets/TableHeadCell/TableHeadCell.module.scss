@@ -9,13 +9,72 @@
     //user-select: none;
     //touch-action:none; // prevents from scrolling while dragging on touch devices
     //background: violet;
-    //border: 1px solid #0a608b;
+    outline: 1px solid #0a608b;
+    overflow: hidden;
+
+
+
+
+
+
+    &:hover {
+        .reorder {
+            opacity: 1;
+        }
+
+        .dropdown {
+            opacity: 1;
+        }
+
+    }
+
+    &:active .ripple {
+        animation: ripple .4s ease-in;
+    }
+
 }
+
+.ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(179, 179, 179, 0.25);
+}
+
+//.c-ripple {
+//    position: absolute;
+//    top: 0;
+//    left: 0;
+//    width: 100%;
+//    height: 100%;
+//    overflow: hidden;
+//    background: transparent;
+//}
+//
+//.c-ripple__circle {
+//    position: absolute;
+//    top: 50%;
+//    left: 50%;
+//    transform: translate(-50%, -50%);
+//    opacity: 0;
+//    width: 0;
+//    height: 0;
+//    border-radius: 50%;
+//    background: rgba(255, 255, 255, .25);
+//    .c-ripple.is-active & {
+//        animation: a-ripple .4s ease-in;
+//    }
+//}
 
 .container {
     display: flex;
     overflow: hidden;
-    -webkit-overflow-scrolling: touch;
+    //-webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
 }
@@ -34,6 +93,8 @@
     margin-left: 20px;
     border-radius: 50%;
     border: none;
+    opacity: 0;
+    transition: opacity .12s;
 
     &:hover {
         background-color: #ccc;
@@ -74,14 +135,17 @@
 
 .reorder {
     position: absolute;
+    min-height: 20px;
     top: 0;
     bottom: 50%;
-    left: -5px;
+    left: 0;
     width: 20px;
-    background: pink;
+    //background: pink;
     z-index: 100;
+    opacity: 0;
     //outline: 1px solid red;
     cursor: move;
+    transition: opacity .12s;
     touch-action: none; // prevents from scrolling while dragging on touch devices
 
     &::after {
@@ -92,6 +156,8 @@
         background-image: url('../../assets/icons/dots-square.svg');
         background-repeat: no-repeat;
     }
+
+
 }
 
 .resizer {
@@ -103,9 +169,11 @@
     //outline: 1px solid purple;
     background: yellow;
     z-index: 10;
-    opacity: 0.15;
+    opacity: 0.5;
+    transition: opacity .12s;
     cursor: col-resize;
     touch-action: none; // prevents from scrolling while dragging on touch devices
+    //pointer-events: none;
 
     &::after {
         content: '';
@@ -120,12 +188,38 @@
         //opacity: 0;
     }
 
-    &:hover &::after {
+    &:hover {
         opacity: 1;
-        outline: 1px solid red;
+
+        &::after {
+            opacity: 1;
+            outline: 1px solid red;
+        }
     }
+
+
 }
 
 .dots {
     user-select: none;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes ripple {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        width: 200%;
+        padding-bottom: 200%;
+        opacity: 0;
+    }
 }

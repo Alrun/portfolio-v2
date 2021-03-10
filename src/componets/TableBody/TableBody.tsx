@@ -1,9 +1,8 @@
 import React from 'react';
 
-import TableRow, { tableCells, TableRowDataInterface } from '../TableRow/TableRow';
+import TableRow, { TableRowDataInterface } from '../TableRow/TableRow';
 
 import classes from './TableBody.module.scss';
-import TableCell from '../TableCell/TableCell';
 import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
 
 // export interface TableBodyData {
@@ -19,20 +18,21 @@ export interface TableBodyProps {
 }
 
 const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
-    ({ columns, items, loading, error }: TableBodyProps, ref) => {
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function TableBodyRef({ columns, items /* , loading, error */ }: TableBodyProps, ref) {
         const rendersCount = React.useRef<number>(0);
 
-        const defineFixedColumns = columns.filter((col: any) => col.isFixed && !col.isHidden);
+        const defineFixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
 
         const padding = defineFixedColumns.reduce((acc: any, cur: any) => {
-            if (!cur.isHidden) {
+            if (!cur.hidden) {
                 return acc + cur.width;
             }
             return acc;
         }, 0);
 
         const fullWidth = columns.reduce((acc: any, cur: any) => {
-            if (!cur.isHidden && !cur.isFixed) {
+            if (!cur.hidden && !cur.fixed) {
                 return acc + cur.width;
             }
             return acc;
@@ -45,8 +45,8 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
                     {!!items.length &&
                         items.map((item: any) =>
                             item.group?.length ? (
-                                <div data-group="tt">
-                                    <TableRow key={item.id} item={item} columns={columns} />
+                                <div data-group="tt" key={item.id}>
+                                    <TableRow item={item} columns={columns} />
                                     <div className={classes.group}>
                                         {item.group.map((groupItem: any) => (
                                             <TableRow key={groupItem.id} item={groupItem} columns={columns} isGroup />

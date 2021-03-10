@@ -20,76 +20,76 @@ export interface TableRowPropsInterface {
 }
 
 export const tableCells = (columns: any, item: any) => [
-    <TableCell col={columns[0]}>
+    <TableCell key="1" col={columns[0]}>
         <div>{item.symbol}</div>
         <div>{item.title}</div>
     </TableCell>,
 
-    <TableCell col={columns[1]}>
+    <TableCell key="2" col={columns[1]}>
         <div>{item.quantity}</div>
         <div>{item.value}</div>
     </TableCell>,
 
-    <TableCell col={columns[2]}>
+    <TableCell key="3" col={columns[2]}>
         <div>{item.price_buy}</div>
         <div>{item.price_current}</div>
     </TableCell>,
 
-    <TableCell col={columns[3]}>
+    <TableCell key="4" col={columns[3]}>
         <div>{item.change}</div>
     </TableCell>,
 
-    <TableCell col={columns[4]}>
+    <TableCell key="5" col={columns[4]}>
         <div>{item.sold}</div>
     </TableCell>,
 
-    <TableCell col={columns[5]}>
+    <TableCell key="6" col={columns[5]}>
         <div>{item.quota}</div>
     </TableCell>,
 
-    <TableCell col={columns[6]}>
+    <TableCell key="7" col={columns[6]}>
         <div>{item.wallet}</div>
         <div>{item.date}</div>
     </TableCell>,
 
-    <TableCell col={columns[7]}>
+    <TableCell key="8" col={columns[7]}>
         <div>:</div>
     </TableCell>
 ];
 
 export const tableCellsGroup = (columns: any, item: any) => [
-    <TableCell col={columns[0]}>
+    <TableCell key="1" col={columns[0]}>
         <div>{item.symbol}</div>
     </TableCell>,
 
-    <TableCell col={columns[1]}>
+    <TableCell key="2" col={columns[1]}>
         <div>{item.quantity}</div>
         <div>{item.value}</div>
     </TableCell>,
 
-    <TableCell col={columns[2]}>
+    <TableCell key="3" col={columns[2]}>
         <div>{item.price_buy}</div>
         <div>{item.price_current}</div>
     </TableCell>,
 
-    <TableCell col={columns[3]}>
+    <TableCell key="4" col={columns[3]}>
         <div>{item.change}</div>
     </TableCell>,
 
-    <TableCell col={columns[4]}>
+    <TableCell key="5" col={columns[4]}>
         <div>{item.sold}</div>
     </TableCell>,
 
-    <TableCell col={columns[5]}>
+    <TableCell key="6" col={columns[5]}>
         <div>{item.quota}</div>
     </TableCell>,
 
-    <TableCell col={columns[6]}>
+    <TableCell key="7" col={columns[6]}>
         <div>{item.wallet}</div>
         <div>{item.date}</div>
     </TableCell>,
 
-    <TableCell col={columns[7]}>
+    <TableCell key="8" col={columns[7]}>
         <div>:</div>
     </TableCell>
 ];
@@ -97,11 +97,11 @@ export const tableCellsGroup = (columns: any, item: any) => [
 export default function TableRow({ item, columns, children, isGroup }: any) {
     const defineGroup = isGroup ? (
         <div className={classes.root}>
-            {tableCellsGroup(columns, item).filter((cell) => !cell.props.col.isFixed && !cell.props.col.isHidden)}
+            {tableCellsGroup(columns, item).filter((cell) => !cell.props.col.fixed && !cell.props.col.hidden)}
         </div>
     ) : (
         <div className={classes.root}>
-            {tableCells(columns, item).filter((cell) => !cell.props.col.isFixed && !cell.props.col.isHidden)}
+            {tableCells(columns, item).filter((cell) => !cell.props.col.fixed && !cell.props.col.hidden)}
         </div>
     );
 

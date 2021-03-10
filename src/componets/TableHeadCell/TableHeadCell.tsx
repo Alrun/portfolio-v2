@@ -2,33 +2,18 @@ import React from 'react';
 
 import classes from './TableHeadCell.module.scss';
 
-export interface TableHeadRef {
-    cellRef: React.RefObject<HTMLDivElement>;
-    reorderRef: React.RefObject<HTMLDivElement>;
-    resizeRef: React.RefObject<HTMLDivElement>;
-}
-
 export interface TableHeadProps {
     item: any;
+    isDraggable?: boolean;
+    isResizable?: boolean;
 }
 
-const TableHeadCell = React.forwardRef<TableHeadRef, TableHeadProps>(({ item }: TableHeadProps, ref) => {
-    const cellRef = React.useRef<HTMLDivElement>(null);
-    const reorderRef = React.useRef<HTMLDivElement>(null);
-    const resizeRef = React.useRef<HTMLDivElement>(null);
-
-    React.useImperativeHandle(ref, () => ({
-        cellRef,
-        reorderRef,
-        resizeRef
-    }));
-
-    return (
+const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadProps>(
+    ({ item, isDraggable, isResizable }: TableHeadProps, ref) => (
         <div
-            ref={cellRef}
+            ref={ref}
             data-col-id={item.head[0].id}
-            data-draggable="true"
-            data-resizable="true"
+            data-draggable="container"
             className={classes.root}
             key={item.head[0].id}
             style={{
@@ -38,7 +23,13 @@ const TableHeadCell = React.forwardRef<TableHeadRef, TableHeadProps>(({ item }: 
                 order: item.order
             }}
         >
-            <div ref={reorderRef} className={classes.reorder} aria-hidden="true" />
+            <div
+                data-draggable="toggle"
+                className={isDraggable ? classes.reorder : `${classes.reorder} ${classes.hidden}`}
+                aria-hidden="true"
+            />
+
+            <span className={classes.ripple} />
 
             <div className={classes.container}>
                 <div className={classes.actions}>
@@ -61,9 +52,13 @@ const TableHeadCell = React.forwardRef<TableHeadRef, TableHeadProps>(({ item }: 
                 </div>
             </div>
 
-            <div ref={resizeRef} className={classes.resizer} aria-hidden="true" />
+            <div
+                data-resizable="toggle"
+                className={isResizable ? classes.resizer : `${classes.resizer} ${classes.hidden}`}
+                aria-hidden="true"
+            />
         </div>
-    );
-});
+    )
+);
 
 export default TableHeadCell;

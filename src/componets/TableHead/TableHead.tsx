@@ -1,13 +1,8 @@
 import React from 'react';
 
-// import debounce from 'lodash/debounce';
-import dots from '../../assets/icons/dots-square.svg';
-
 import classes from './TableHead.module.scss';
 import useDraggable from '../../hooks/useDraggable';
-import useScroll from '../../hooks/useScroll';
-import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
-import TableHeadCell, { TableHeadRef } from '../TableHeadCell/TableHeadCell';
+import TableHeadCell from '../TableHeadCell/TableHeadCell';
 
 const colWidth: { [key: string]: number } = {
     min: 50,
@@ -29,28 +24,29 @@ export interface TableHeadProps {
 }
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
-    ({ handleResize, handleReorder, columns, tableRef }: TableHeadProps, ref) => {
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function TableHeadRef({ handleResize, handleReorder, columns, tableRef }: TableHeadProps, ref) {
         const rootRef = React.useRef<HTMLDivElement>(null);
-        const ttRef = React.useRef<any[]>([]);
         const columnItemsRef = React.useRef<HTMLDivElement[]>([]);
         const resizeItemsRef = React.useRef<HTMLDivElement[]>([]);
-        // const columnItemsRef = React.useRef<HTMLElement[]>([]);
         const rendersCount = React.useRef(0);
 
-        const addColumnRefs = React.useCallback((node: TableHeadRef | null) => {
-            // console.log(node);
-            if (node && !ttRef.current?.includes(node.cellRef.current?.dataset.colId)) {
-                ttRef.current.push(node.cellRef.current?.dataset.colId);
-                columnItemsRef.current.push(node.reorderRef.current as HTMLDivElement);
-                resizeItemsRef.current.push(node.resizeRef.current as HTMLDivElement);
+        const addColumnRefs = React.useCallback((node) => {
+            if (node) {
+                columnItemsRef.current.push(node.querySelector('[data-draggable="toggle"]'));
+                resizeItemsRef.current.push(node.querySelector('[data-resizable="toggle"]'));
             }
         }, []);
 
-        const drag = useDraggable(columnItemsRef, '[data-draggable="true"]');
+        console.log(columnItemsRef);
+
+        const drag = useDraggable(columnItemsRef, '[data-draggable="container"]');
         const resize = useDraggable(resizeItemsRef, `.${resizeItemsRef.current[0]?.className}`);
 
         React.useEffect(() => {
             if (resize.dragEl && resize.status === 'start') {
+                document.body.style.cursor = 'col-resize';
+
                 console.log('start', resize);
             }
 
@@ -61,8 +57,6 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                 if (id) {
                     const initialWidth = columns.filter((col: any) => col.head[0].id === id)[0].width;
                     const cells = tableRef.current.querySelectorAll(`[data-col-id=${id}]`);
-
-                    console.log(resize.deltaX);
 
                     cells.forEach((item: any) => {
                         if (
@@ -87,20 +81,23 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     handleResize(id, currentCol.offsetWidth);
                 }
 
+                document.body.style.cursor = 'default';
+
                 console.log('stop ', resize);
             }
-        }, [columns, handleResize, resize, rootRef, tableRef]);
+        }, [resize, columns, handleResize, tableRef]);
 
         React.useEffect(() => {
             if (drag.dragEl && drag.status === 'start') {
+                document.body.style.cursor = 'move';
                 /**
                  * Highlight reorder column cells
                  */
                 tableRef.current
                     ?.querySelectorAll(`[data-col-id="${drag.dragEl.dataset.colId}"]`)
                     .forEach((item: any) => {
-                    item.style.backgroundColor = '#ececec';
-                });
+                        item.style.backgroundColor = '#ececec';
+                    });
                 /**
                  * Create reorder overlay
                  */
@@ -238,7 +235,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     };
 
                     const defineOrders = columnItemsRef.current.map((item) => {
-                        const el: HTMLElement | null = item.closest('[data-draggable="true"]');
+                        const el: HTMLElement | null = item.closest('[data-draggable="container"]');
                         const elId: string | undefined = el?.dataset.colId;
                         const elOrder: number = Number(el?.style.order);
                         /**
@@ -280,24 +277,26 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     handleReorder(defineOrders);
                 }
 
+                document.body.style.cursor = 'default';
+
                 console.log('stop ', drag);
             }
 
             // return () => console.log(111);
         }, [drag, drag.status, drag.deltaX, handleReorder, tableRef]);
 
-        const defineColumns = (cols: any) => cols.filter((col: any) => !col.isFixed && !col.isHidden);
-        const defineFixedColumns = (cols: any) => cols.filter((col: any) => col.isFixed && !col.isHidden);
+        const visibleColumns = columns.filter((col: any) => !col.fixed && !col.hidden);
+        const fixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
 
-        const padding = defineFixedColumns(columns).reduce((acc: any, cur: any) => {
-            if (!cur.isHidden) {
+        const padding = fixedColumns.reduce((acc: any, cur: any) => {
+            if (!cur.hidden) {
                 return acc + cur.width;
             }
             return acc;
         }, 0);
 
         const fullWidth = columns.reduce((acc: any, cur: any) => {
-            if (!cur.isHidden && !cur.isFixed) {
+            if (!cur.hidden && !cur.fixed) {
                 return acc + cur.width;
             }
             return acc;
@@ -309,17 +308,26 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
                         {columns && (
                             <>
-                                {/* <div className={classes.fixed}> */}
-                                {/*    {defineFixedColumns(columns).map((item: any) => ( */}
-                                {/*        <TableHeadCell */}
-                                {/*            item={item} */}
-                                {/*            ref={tt} */}
-                                {/*        /> */}
-                                {/*    ))} */}
-                                {/* </div> */}
+                                <div className={classes.fixed}>
+                                    {fixedColumns.map((item: any) => (
+                                        <TableHeadCell
+                                            key={item.head[0].id}
+                                            item={item}
+                                            ref={addColumnRefs}
+                                            isDraggable={item.draggable && fixedColumns.length > 1}
+                                            isResizable={item.resizable}
+                                        />
+                                    ))}
+                                </div>
 
-                                {defineColumns(columns).map((item: any) => (
-                                    <TableHeadCell item={item} ref={addColumnRefs} />
+                                {visibleColumns.map((item: any) => (
+                                    <TableHeadCell
+                                        key={item.head[0].id}
+                                        item={item}
+                                        ref={addColumnRefs}
+                                        isDraggable={item.draggable}
+                                        isResizable={item.resizable}
+                                    />
                                 ))}
                             </>
                         )}

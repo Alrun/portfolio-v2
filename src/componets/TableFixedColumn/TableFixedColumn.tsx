@@ -5,19 +5,19 @@ import TableCell from '../TableCell/TableCell';
 import TableRow, { tableCells, tableCellsGroup } from '../TableRow/TableRow';
 
 export default function TableFixedColumn({ columns, items }: any) {
-    // const defineFixedColumns = columns.filter((col: any) => col.isFixed && !col.isHidden);
+    // const defineFixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
     const defineCell = (cols: any, item: any, group?: boolean) =>
         group
-            ? tableCellsGroup(cols, item).filter((col) => col.props.col.isFixed && !col.props.col.isHidden)
-            : tableCells(cols, item).filter((col) => col.props.col.isFixed && !col.props.col.isHidden);
+            ? tableCellsGroup(cols, item).filter((col) => col.props.col.fixed && !col.props.col.hidden)
+            : tableCells(cols, item).filter((col) => col.props.col.fixed && !col.props.col.hidden);
 
     return (
         <div className={classes.root}>
             {!!items.length &&
                 items.map((item: any) =>
                     item.group?.length ? (
-                        <>
-                            <TableRow key={item.id} item={item} columns={columns}>
+                        <div className={classes.collapse} key={item.id}>
+                            <TableRow item={item} columns={columns}>
                                 {defineCell(columns, item)}
                             </TableRow>
                             <div className={classes.group}>
@@ -27,7 +27,7 @@ export default function TableFixedColumn({ columns, items }: any) {
                                     </TableRow>
                                 ))}
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <TableRow key={item.id} item={item} columns={columns}>
                             {defineCell(columns, item)}

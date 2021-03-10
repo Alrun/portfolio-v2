@@ -9,7 +9,7 @@ import { reorder, resize, setData, tableSelector } from '../../redux/slices/tabl
 import TableFooter from '../TableFooter/TableFooter';
 
 export default function Table() {
-    const { columns, sort, items, groupOpen, loading, error } = useSelector(tableSelector);
+    const { columns, items, loading, error } = useSelector(tableSelector);
     const dispatch = useDispatch();
 
     const rendersCount = React.useRef<number>(0);

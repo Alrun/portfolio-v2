@@ -7,8 +7,10 @@ export interface TableColumnsInterface {
         id: string; // TODO Add nonEmptyString type
         title: string;
     }[];
-    isHidden?: boolean;
-    isFixed?: boolean;
+    resizable?: boolean;
+    draggable?: boolean;
+    hidden?: boolean;
+    fixed?: boolean;
 }
 
 export interface TableState {
@@ -24,66 +26,82 @@ export interface TableState {
 const initialState: TableState = {
     columns: [
         {
+            head: [{ id: 'coin', title: 'Coin' }],
             width: 200,
             order: 1,
-            head: [{ id: 'coin', title: 'Coin' }],
-            isFixed: true
+            resizable: true,
+            draggable: true,
+            fixed: true
         },
         {
-            width: 150,
-            order: 2,
             head: [
                 { id: 'quantity', title: 'Quantity' },
                 { id: 'current_value', title: 'Current Value Value' }
-            ]
-            // isFixed: true
+            ],
+            width: 150,
+            order: 2,
+            resizable: true,
+            draggable: false
+            // fixed: true
         },
         {
-            width: 150,
-            order: 3,
             head: [
                 { id: 'buy_price', title: 'Buy Price' },
                 { id: 'current_price', title: 'Current Price' }
             ],
-            // isFixed: true,
-            // isHidden: true
+            width: 150,
+            order: 3,
+            resizable: false,
+            draggable: true
+            // fixed: true,
+            // hidden: true
         },
         {
-            width: 150,
-            order: 4,
             head: [
                 { id: 'change', title: 'Change' },
                 { id: 'fee', title: '(With Fee)' }
-            ]
+            ],
+            width: 150,
+            order: 4,
+            resizable: true,
+            draggable: true
         },
         {
-            width: 150,
-            order: 5,
             head: [
                 { id: 'sold', title: 'Sold Coins' },
                 { id: 'gain', title: 'Gained' }
-            ]
+            ],
+            width: 150,
+            order: 5,
+            resizable: true,
+            draggable: true
         },
         {
+            head: [{ id: 'quota', title: 'Quota' }],
             width: 150,
             order: 6,
-            head: [{ id: 'quota', title: 'Quota' }]
+            resizable: true,
+            draggable: true
         },
         {
-            width: 150,
-            order: 7,
             head: [
                 { id: 'wallet', title: 'Wallet' },
                 { id: 'date', title: 'Buy Date' }
-            ]
-            // isHidden: true
+            ],
+            width: 150,
+            order: 7,
+            resizable: true,
+            draggable: true
+            // hidden: true
         },
         {
+            head: [{ id: 'info', title: '' }],
             width: 150,
             order: 8,
-            head: [{ id: 'info', title: '' }]
-            // isHidden: true
-            // isFixed: true
+            resizable: true,
+            draggable: true
+            // hidden: true
+            // fixed: true
         }
     ],
     sort: {

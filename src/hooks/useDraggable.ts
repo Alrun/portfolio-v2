@@ -93,8 +93,6 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
                         status: 'stop'
                     });
                 }
-
-                document.body.style.cursor = 'default';
             }
 
             function onMousedown(e: any) {
@@ -125,8 +123,6 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
                         status: 'start'
                     });
                 }
-
-                document.body.style.cursor = 'move';
             }
 
             draggableEl.addEventListener('dragstart', (e) => e.preventDefault());
