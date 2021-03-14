@@ -82,6 +82,7 @@ export default function Table() {
                     handleReorder={handleReorder}
                     ref={headRef}
                     tableRef={rootRef}
+                    bodyRef={bodyRef}
                 />
 
                 <TableBody items={items} columns={columns} loading={loading} error={error} ref={bodyRef} />

@@ -1,0 +1,23 @@
+.root {
+    position: relative;
+    overflow: hidden;
+    transition: background 400ms;
+    height: 100%;
+    width: 100%;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 600ms linear;
+    background-color: rgba(176, 176, 176, 0.5);
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

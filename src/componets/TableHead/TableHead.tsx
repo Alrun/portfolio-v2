@@ -4,11 +4,6 @@ import classes from './TableHead.module.scss';
 import useDraggable from '../../hooks/useDraggable';
 import TableHeadCell from '../TableHeadCell/TableHeadCell';
 
-const colWidth: { [key: string]: number } = {
-    min: 50,
-    max: 500
-};
-
 export interface TableHeadProps {
     // data: {
     //     id: string;
@@ -21,31 +16,60 @@ export interface TableHeadProps {
     handleResize: (width: any, cursor: any) => void;
     columns: any;
     tableRef: any;
+    bodyRef: any;
 }
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
-    function TableHeadRef({ handleResize, handleReorder, columns, tableRef }: TableHeadProps, ref) {
+    function TableHeadRef({ handleResize, handleReorder, columns, tableRef, bodyRef }: TableHeadProps, ref) {
         const rootRef = React.useRef<HTMLDivElement>(null);
         const columnItemsRef = React.useRef<HTMLDivElement[]>([]);
         const resizeItemsRef = React.useRef<HTMLDivElement[]>([]);
+
         const rendersCount = React.useRef(0);
+
+        const visibleColumns = columns.filter((col: any) => !col.fixed && !col.hidden);
+        const fixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
+
+        const padding = fixedColumns.reduce((acc: any, cur: any) => {
+            if (!cur.hidden) {
+                return acc + cur.width;
+            }
+            return acc;
+        }, 0);
+
+        const fullWidth = columns.reduce((acc: any, cur: any) => {
+            if (!cur.hidden && !cur.fixed) {
+                return acc + cur.width;
+            }
+            return acc;
+        }, 0);
 
         const addColumnRefs = React.useCallback((node) => {
             if (node) {
-                columnItemsRef.current.push(node.querySelector('[data-draggable="toggle"]'));
-                resizeItemsRef.current.push(node.querySelector('[data-resizable="toggle"]'));
+                const reorderNode = node.querySelector('[data-draggable="toggle"]');
+                const resizeNode = node.querySelector('[data-resizable="toggle"]');
+
+                if (reorderNode) {
+                    columnItemsRef.current.push(reorderNode);
+                }
+
+                if (resizeNode) {
+                    resizeItemsRef.current.push(resizeNode);
+                }
             }
         }, []);
 
-        console.log(columnItemsRef);
-
         const drag = useDraggable(columnItemsRef, '[data-draggable="container"]');
         const resize = useDraggable(resizeItemsRef, `.${resizeItemsRef.current[0]?.className}`);
-
+        /**
+         * Resize column
+         */
         React.useEffect(() => {
             if (resize.dragEl && resize.status === 'start') {
                 document.body.style.cursor = 'col-resize';
+
+                rootRef.current?.classList.add(classes.resizing);
 
                 console.log('start', resize);
             }
@@ -53,22 +77,32 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             if (resize.dragEl && resize.status === 'move') {
                 const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
                 const id: string | undefined = currentCol?.dataset.colId;
+                const isFixed: boolean = !!currentCol?.closest(`.${classes.fixed}`);
 
                 if (id) {
                     const initialWidth = columns.filter((col: any) => col.head[0].id === id)[0].width;
                     const cells = tableRef.current.querySelectorAll(`[data-col-id=${id}]`);
 
                     cells.forEach((item: any) => {
-                        if (
-                            initialWidth + resize.deltaX > colWidth.min &&
-                            initialWidth + resize.deltaX < colWidth.max
-                        ) {
-                            item.style.width = `${initialWidth + resize.deltaX}px`;
-                            item.style.minWidth = `${initialWidth + resize.deltaX}px`;
-                            item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
-                        }
+                        item.style.width = `${initialWidth + resize.deltaX}px`;
+                        item.style.minWidth = `${initialWidth + resize.deltaX}px`;
+                        item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
                     });
+
+                    if (isFixed) {
+                        if (rootRef.current) {
+                            rootRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
+                        }
+
+                        if (bodyRef.current) {
+                            bodyRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
+                        }
+                    }
                 }
+
+                // if (currentCol?.closest(`.${classes.fixed}`)) {
+                //     console.log(tableRef.current);
+                // }
 
                 // console.log('move', resize.deltaX);
             }
@@ -81,15 +115,40 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     handleResize(id, currentCol.offsetWidth);
                 }
 
+                rootRef.current?.classList.remove(classes.resizing);
                 document.body.style.cursor = 'default';
 
                 console.log('stop ', resize);
             }
-        }, [resize, columns, handleResize, tableRef]);
-
+        }, [bodyRef, columns, handleResize, padding, resize, tableRef]);
+        /**
+         * Reorder column
+         */
         React.useEffect(() => {
             if (drag.dragEl && drag.status === 'start') {
                 document.body.style.cursor = 'move';
+                rootRef.current?.classList.add(classes.reordering);
+
+                columnItemsRef.current.forEach((item) => {
+                    const col = document.createElement('span');
+                    // const diameter = Math.max(button.clientWidth, button.clientHeight);
+                    // const radius = diameter / 2;
+                    //
+                    // // eslint-disable-next-line no-multi-assign
+                    // col.style.width = circle.style.height = `${diameter}px`;
+                    // circle.style.left = `${Math.round(event.clientX - button.getBoundingClientRect().left - radius)}px`;
+                    // circle.style.top = `${Math.round(event.clientY - button.getBoundingClientRect().top - radius)}px`;
+                    col.classList.add(classes.dragCol);
+                    //
+                    // const ripple = button.getElementsByClassName(classes.ripple)[0];
+                    //
+                    // if (ripple) {
+                    //     ripple.remove();
+                    // }
+                    //
+                    item.appendChild(col);
+                });
+
                 /**
                  * Highlight reorder column cells
                  */
@@ -138,7 +197,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                      * Apply drag effect
                      */
                     draggedCol.style.left = `${drag.deltaX}px`;
-                    draggedCol.style.zIndex = '100';
+                    draggedCol.style.zIndex = '1000';
                     draggedCol.style.opacity = '0.5';
 
                     const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
@@ -277,30 +336,14 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                     handleReorder(defineOrders);
                 }
 
+                rootRef.current?.classList.remove(classes.reordering);
                 document.body.style.cursor = 'default';
 
                 console.log('stop ', drag);
             }
 
             // return () => console.log(111);
-        }, [drag, drag.status, drag.deltaX, handleReorder, tableRef]);
-
-        const visibleColumns = columns.filter((col: any) => !col.fixed && !col.hidden);
-        const fixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
-
-        const padding = fixedColumns.reduce((acc: any, cur: any) => {
-            if (!cur.hidden) {
-                return acc + cur.width;
-            }
-            return acc;
-        }, 0);
-
-        const fullWidth = columns.reduce((acc: any, cur: any) => {
-            if (!cur.hidden && !cur.fixed) {
-                return acc + cur.width;
-            }
-            return acc;
-        }, 0);
+        }, [drag, handleReorder, tableRef]);
 
         return (
             <div ref={rootRef} className={classes.root} style={{ paddingLeft: `${padding}px` }}>

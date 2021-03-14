@@ -61,9 +61,7 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
             function onMouseUp(e: any) {
                 let targetEl;
 
-                if (el) {
-                    el.style.visibility = 'hidden';
-                }
+                if (el) el.style.visibility = 'hidden';
 
                 if (e.type === 'touchend') {
                     targetEl = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);

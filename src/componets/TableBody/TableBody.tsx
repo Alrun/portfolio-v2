@@ -41,7 +41,9 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
         return (
             <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
                 <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
+
                     {!!defineFixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
+
                     {!!items.length &&
                         items.map((item: any) =>
                             item.group?.length ? (

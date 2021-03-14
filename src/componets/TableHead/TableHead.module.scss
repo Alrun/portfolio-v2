@@ -65,5 +65,19 @@
     }
 }
 
+.resizing {
+    outline: 2px solid red;
+}
 
+.reordering {
+    outline: 2px solid green;
+}
+
+.dragCol {
+    position: fixed;
+    outline: 1px solid red;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+}
 
