@@ -1,9 +1,15 @@
 .root {
-    position: relative;
+    //position: relative;
+    position: absolute;
     overflow: hidden;
     transition: background 400ms;
-    height: 100%;
-    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    //height: 100%;
+    //width: 100%;
+    pointer-events: none;
 }
 
 .ripple {

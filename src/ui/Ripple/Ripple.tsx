@@ -2,37 +2,106 @@ import React from 'react';
 
 import classes from './Ripple.module.scss';
 
-const Ripple = ({children}: any) => {
-    const tt = (event: any) => {
-        const button = event.currentTarget;
-        const circle = document.createElement('span');
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
+interface RippleProps {
+    component?: 'span' | 'div';
+    children?: React.ReactNode;
+    // show: boolean;
+}
 
-        // eslint-disable-next-line no-multi-assign
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${Math.round(event.clientX - button.getBoundingClientRect().left - radius)}px`;
-        circle.style.top = `${Math.round(event.clientY - button.getBoundingClientRect().top - radius)}px`;
-        circle.classList.add(classes.ripple);
+const Ripple = React.forwardRef<HTMLDivElement, any>(
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function RippleRef(props, ref: any) {
+        // console.log('ripple props ', props);
+        const rootRef = React.useRef<HTMLSpanElement>(null);
 
-        const ripple = button.getElementsByClassName(classes.ripple)[0];
+        const start = React.useCallback((event) => {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
 
-        if (ripple) {
-            ripple.remove();
-        }
+            if (rootRef.current) {
+                const { top, left } = rootRef.current.getBoundingClientRect();
 
-        button.appendChild(circle);
-    };
+                // eslint-disable-next-line no-multi-assign
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${Math.round(event.clientX - left - radius)}px`;
+                circle.style.top = `${Math.round(event.clientY - top - radius)}px`;
+                circle.classList.add(classes.ripple);
+            }
 
-    return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-        <span onClick={tt} className={classes.root}>
-            {children}
-        </span>
-    );
-};
+            setTimeout(() => {
+                const ripple = rootRef.current?.getElementsByClassName(classes.ripple)[0];
+
+                if (ripple) {
+                    ripple.remove();
+                }
+            }, 1000);
+
+            rootRef.current?.appendChild(circle);
+        }, []);
+
+        React.useImperativeHandle(
+            ref,
+            () => ({
+                // pulsate: pulsate,
+                start
+                // stop: stop
+            }),
+            [start]
+        );
+
+        // const handleClick = (event: any) => {
+        //     const button = event.currentTarget;
+        //     const circle = document.createElement('span');
+        //     const diameter = Math.max(button.clientWidth, button.clientHeight);
+        //     const radius = diameter / 2;
+        //
+        //     console.log('ripple');
+        //
+        //     // eslint-disable-next-line no-multi-assign
+        //     circle.style.width = circle.style.height = `${diameter}px`;
+        //     circle.style.left = `${Math.round(event.clientX - button.getBoundingClientRect().left - radius)}px`;
+        //     circle.style.top = `${Math.round(event.clientY - button.getBoundingClientRect().top - radius)}px`;
+        //     circle.classList.add(classes.ripple);
+        //
+        //     const ripple = button.getElementsByClassName(classes.ripple)[0];
+        //
+        //     if (ripple) {
+        //         ripple.remove();
+        //     }
+        //
+        //     button.appendChild(circle);
+        // };
+
+        // React.useEffect(() => {
+        //     handleClick
+        //
+        // }, [show])
+
+        return <span ref={rootRef} className={classes.root} />;
+
+        // return React.createElement(
+        //     'span',
+        //     {
+        //         onClick: handleClick,
+        //         className: classes.root
+        //     }
+        //     // children
+        // );
+    }
+);
+
+// Ripple.defaultProps = {
+//     component: 'span',
+//     children: undefined
+// };
 
 export default Ripple;
+
+// Ripple.defaultProps = {
+//     children: JSX.Element | undefined
+// };
 
 // const Button = ({ children }) => {
 //     function createRipple(event) {
@@ -58,7 +127,6 @@ export default Ripple;
 //
 //     return <button onClick={createRipple}>{children}</button>;
 // };
-
 
 //
 // "use strict";

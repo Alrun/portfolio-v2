@@ -1,27 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface TableColumnsInterface {
-    width: number;
-    order: number;
-    head: {
-        id: string; // TODO Add nonEmptyString type
-        title: string;
-    }[];
-    resizable?: boolean;
-    draggable?: boolean;
-    hidden?: boolean;
-    fixed?: boolean;
-}
-
-export interface TableState {
-    columns: TableColumnsInterface[];
-    sort: any;
-    items: any; // TODO Add types for items
-    groupOpen: string[];
-    pinned: string[];
-    loading: boolean;
-    error: string;
-}
+import { TableState } from './table.d';
 
 const initialState: TableState = {
     columns: [
@@ -40,6 +19,7 @@ const initialState: TableState = {
             ],
             width: 150,
             order: 2,
+            align: 'end',
             resizable: true,
             draggable: false
             // fixed: true
@@ -51,6 +31,7 @@ const initialState: TableState = {
             ],
             width: 150,
             order: 3,
+            align: 'end',
             resizable: false,
             draggable: true
             // fixed: true,
@@ -61,6 +42,7 @@ const initialState: TableState = {
                 { id: 'change', title: 'Change' },
                 { id: 'fee', title: '(With Fee)' }
             ],
+            align: 'end',
             width: 150,
             order: 4,
             resizable: true,
@@ -71,6 +53,7 @@ const initialState: TableState = {
                 { id: 'sold', title: 'Sold Coins' },
                 { id: 'gain', title: 'Gained' }
             ],
+            align: 'end',
             width: 150,
             order: 5,
             resizable: true,
@@ -80,6 +63,7 @@ const initialState: TableState = {
             head: [{ id: 'quota', title: 'Quota' }],
             width: 150,
             order: 6,
+            align: 'center',
             resizable: true,
             draggable: true
         },
@@ -98,6 +82,7 @@ const initialState: TableState = {
             head: [{ id: 'info', title: '' }],
             width: 150,
             order: 8,
+            align: 'center',
             resizable: true,
             draggable: true
             // hidden: true

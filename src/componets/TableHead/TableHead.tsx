@@ -1,23 +1,10 @@
 import React from 'react';
 
 import classes from './TableHead.module.scss';
+import { TableHeadProps } from './TableHead.d';
+
 import useDraggable from '../../hooks/useDraggable';
 import TableHeadCell from '../TableHeadCell/TableHeadCell';
-
-export interface TableHeadProps {
-    // data: {
-    //     id: string;
-    //     items: {
-    //         id: string;
-    //         title: string;
-    //     }[];
-    // }[];
-    handleReorder: ({ dragEl, targetEl }: any) => void;
-    handleResize: (width: any, cursor: any) => void;
-    columns: any;
-    tableRef: any;
-    bodyRef: any;
-}
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
@@ -356,6 +343,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                         <TableHeadCell
                                             key={item.head[0].id}
                                             item={item}
+                                            align={item.align}
                                             ref={addColumnRefs}
                                             isDraggable={item.draggable && fixedColumns.length > 1}
                                             isResizable={item.resizable}
@@ -367,6 +355,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                     <TableHeadCell
                                         key={item.head[0].id}
                                         item={item}
+                                        align={item.align}
                                         ref={addColumnRefs}
                                         isDraggable={item.draggable}
                                         isResizable={item.resizable}

@@ -14,16 +14,17 @@ export interface PopoverProps {
 }
 
 export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
-    const [referenceElement, setReferenceElement] = React.useState<HTMLDivElement | null>(null);
-    const [popperElement, setPopperElement] = React.useState<HTMLDivElement | null>(null);
-    const [arrowElement, setArrowElement] = React.useState<HTMLDivElement | null>(null);
+    const referenceElement = React.useRef<HTMLDivElement>(null);
+    const popperElement = React.useRef<HTMLDivElement>(null);
+    const arrowElement = React.useRef<HTMLDivElement>(null);
 
-    const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
+
+    const { styles, update, attributes } = usePopper(referenceElement.current, popperElement.current, {
         placement,
         strategy: 'fixed',
         modifiers: [
             { name: 'offset', options: { offset: [0, 8] } },
-            { name: 'arrow', options: { element: arrowElement } }
+            { name: 'arrow', options: { element: arrowElement.current } }
         ]
     });
 
@@ -38,7 +39,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
 
     return (
         <>
-            <div className={classes.target} ref={setReferenceElement as any}>
+            <div className={classes.target} ref={referenceElement}>
                 {children}
             </div>
 
@@ -47,7 +48,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
                 className={show ? `${classes.container} ${classes.show}` : classes.container}
                 // @ts-ignore
                 show={show}
-                ref={setPopperElement as any}
+                ref={popperElement}
                 style={styles.popper}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...attributes.popper}
@@ -55,7 +56,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
                 {content}
                 <div
                     className={`arrow-${attributes.popper?.['data-popper-placement'] ?? 'Arrow'}`}
-                    ref={setArrowElement as any}
+                    ref={arrowElement}
                     style={styles.arrow}
                     /* eslint-disable-next-line react/jsx-props-no-spreading */
                     {...attributes.arrow}

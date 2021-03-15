@@ -18,7 +18,7 @@ export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show
 
     return (
         <Tooltip {...rest} show={show}>
-            <div onMouseEnter={open} onMouseLeave={close}>
+            <div onMouseEnter={open} onMouseLeave={close} className="tooltip-wrapper">
                 {children}
             </div>
         </Tooltip>

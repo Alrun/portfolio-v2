@@ -18,7 +18,7 @@ import classes from './TableCell.module.scss';
 //     columns: any;
 // }
 
-export default function TableCell({ col: { head, width, order }, addClasses, children }: any) {
+export default function TableCell({ col: { head, width, order, align = 'start' }, addClasses, children }: any) {
     return (
         <div
             data-col-id={head[0].id}
@@ -28,7 +28,7 @@ export default function TableCell({ col: { head, width, order }, addClasses, chi
                 maxWidth: width,
                 order
             }}
-            className={classes.root}
+            className={`${classes.root} ${classes[align]}`}
         >
             {children}
         </div>

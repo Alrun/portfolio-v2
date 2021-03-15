@@ -1,25 +1,12 @@
 import React from 'react';
-import TableCell from '../TableCell/TableCell';
 
 import classes from './TableRow.module.scss';
+import { TableRowProps } from './TableRow.d';
 
-export interface TableRowDataInterface {
-    coin: string;
-    title: string;
-    quantity: number;
-    price_buy: number;
-    change: number;
-    sold: number;
-    quota: number;
-    wallet: string;
-}
+import TableCell from '../TableCell/TableCell';
+import { TableColumnInterface, TableItemInterface } from '../../redux/slices/table/table.d';
 
-export interface TableRowPropsInterface {
-    row: TableRowDataInterface;
-    columns: any;
-}
-
-export const tableCells = (columns: any, item: any) => [
+export const tableCells = (columns: TableColumnInterface[], item: TableItemInterface) => [
     <TableCell key="1" col={columns[0]}>
         <div>{item.symbol}</div>
         <div>{item.title}</div>
@@ -57,7 +44,7 @@ export const tableCells = (columns: any, item: any) => [
     </TableCell>
 ];
 
-export const tableCellsGroup = (columns: any, item: any) => [
+export const tableCellsGroup = (columns: TableColumnInterface[], item: TableItemInterface) => [
     <TableCell key="1" col={columns[0]}>
         <div>{item.symbol}</div>
     </TableCell>,
@@ -94,7 +81,7 @@ export const tableCellsGroup = (columns: any, item: any) => [
     </TableCell>
 ];
 
-export default function TableRow({ item, columns, children, isGroup }: any) {
+export default function TableRow({ item, columns, children, isGroup }: TableRowProps) {
     const defineGroup = isGroup ? (
         <div className={classes.root}>
             {tableCellsGroup(columns, item).filter((cell) => !cell.props.col.fixed && !cell.props.col.hidden)}

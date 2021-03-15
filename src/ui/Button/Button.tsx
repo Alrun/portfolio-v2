@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './button.scss';
+import Ripple from '../Ripple/Ripple';
 
 export interface ButtonProps {
     /**
@@ -16,13 +17,12 @@ export interface ButtonProps {
      */
     size?: 'small' | 'medium' | 'large';
     /**
-     * Button contents
-     */
-    label: string;
-    /**
      * Optional click handler
      */
     onClick?: () => void;
+    children: JSX.Element | string;
+    isDisabled?: boolean;
+    tabIndex?: number;
 }
 
 /**
@@ -32,7 +32,9 @@ export const Button: React.FC<ButtonProps> = ({
     primary = false,
     size = 'medium',
     backgroundColor,
-    label
+    children,
+    isDisabled,
+    tabIndex = 0
 }: ButtonProps) => {
     const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
 
@@ -41,8 +43,10 @@ export const Button: React.FC<ButtonProps> = ({
             type="button"
             className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
             style={{ backgroundColor }}
+            tabIndex={isDisabled ? -1 : tabIndex}
         >
-            {label}
+            {children}
+            <Ripple />
         </button>
     );
 };
