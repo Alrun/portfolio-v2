@@ -1,0 +1,279 @@
+.root {
+    display: flex;
+    //flex-direction: column;
+    position: relative;
+    align-items: center;
+    //user-select: none;
+    //touch-action:none; // prevents from scrolling while dragging on touch devices
+    //background: violet;
+    //overflow: hidden;
+
+    &:hover {
+        .reorder {
+            opacity: 1;
+        }
+
+        .dropdown {
+            opacity: 1;
+        }
+
+    }
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    //overflow: hidden;
+    //-webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+
+    &.start {
+        text-align: left;
+    }
+
+    &.end {
+        text-align: right;
+    }
+
+    &.center {
+        text-align: center;
+    }
+}
+
+.actions {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    //display: flex;
+    //align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 1;
+    margin: auto;
+
+    //width: 40px;
+    //display: flex;
+    //align-items: center;
+    //outline: 1px solid red;
+
+    .start & {
+        right: 10px
+    }
+
+    .end & {
+        left: 15px
+    }
+
+    .center & {
+        right: 10px;
+    }
+}
+
+.dropdown {
+    //width: 20px;
+    //height: 20px;
+    //background: #000;
+    //display: flex;
+    //background-image: url('../../assets/icons/dots-vertical.svg');
+    //background-repeat: no-repeat;
+    //background-position: 50%;
+    //margin-left: 20px;
+    border: none;
+    padding: 0;
+    //outline: 1px solid green;
+    opacity: 0;
+    transition: opacity .12s;
+
+    &:hover {
+        background-color: #ccc;
+    }
+
+    &Icon {
+        //outline: 1px solid red;
+    }
+}
+
+.iconWrapper {
+    width: 100%;
+    display: flex;
+    align-items: inherit;
+    justify-content: inherit;
+}
+
+.labels {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.button {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: 0 30px;
+    width: 100%;
+    background: transparent;
+    justify-content: inherit;
+    font-weight: 500;
+    border: none;
+    user-select: none; // delete after styled buttons
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 13px;
+    text-align: inherit;
+
+    .start & {
+        padding-right: 40px
+    }
+
+    .end & {
+        padding-left: 45px
+    }
+
+    .center & {
+        padding-right: 40px;
+    }
+
+    &:hover {
+        color: #229abf;
+    }
+}
+
+.text {
+    overflow: hidden;
+    //font-size: 10px;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.reorder {
+    position: absolute;
+    min-height: 20px;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    width: 20px;
+    margin-top: 2px;
+    z-index: 100;
+    overflow: hidden;
+    opacity: 0;
+    //outline: 1px solid red;
+    cursor: move;
+    transition: opacity .12s;
+    touch-action: none; // prevents from scrolling while dragging on touch devices
+
+    &::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 25px;
+        //background-image: url('../../assets/icons/dots-square.svg');
+        //background-repeat: no-repeat;
+    }
+}
+
+
+
+.resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -11px;
+    width: 20px;
+    //outline: 1px solid purple;
+    //background: yellow;
+    z-index: 10;
+    //opacity: 0.2;
+    //transition: opacity .12s;
+
+    touch-action: none; // prevents from scrolling while dragging on touch devices
+    //pointer-events: none;
+
+
+}
+
+.separator {
+    //content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 2px;
+    background: #000;
+    pointer-events: none;
+    opacity: 0.2;
+
+}
+
+.resizeTrigger {
+    cursor: col-resize;
+    height: 100%;
+
+    &:hover .separator {
+        opacity: 1;
+    }
+}
+
+.resizeEl {
+    .separator {
+        opacity: 1;
+    }
+}
+
+
+.dragged {
+    //outline: 5px solid rebeccapurple;
+    .reorder {
+        visibility: hidden;
+    }
+
+    .actions {
+        visibility: hidden;
+    }
+}
+
+.draggedActive {
+
+    .labels {
+        //outline: 3px solid #ff602f;
+        pointer-events: none;
+    }
+
+    .reorder {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    //.actions {
+    //    opacity: 0;
+    //}
+}
+//[data-resizable="true"] {
+//
+//
+//    &:hover {
+//        opacity: 1;
+//
+//        &::after {
+//            opacity: 1;
+//            //outline: 1px solid red;
+//        }
+//    }
+//}
+
+.dots {
+    user-select: none;
+}
+
+.hidden {
+    display: none;
+}
+
+

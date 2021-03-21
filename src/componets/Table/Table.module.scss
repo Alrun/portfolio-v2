@@ -1,0 +1,27 @@
+.root {
+    //outline: 1px solid pink;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    //margin: 10em auto 30em;
+    //max-width: 960px;
+    //-webkit-overflow-scrolling: touch;
+    //overscroll-behavior: contain;
+}
+
+//[data-col-id="quantity"] button,
+//[data-col-id="price"] button,
+//[data-col-id="change"] button,
+//[data-col-id="sold"] button {
+//    justify-content: flex-end;
+//}
+//
+//[data-col-id="quota"] button,
+//[data-col-id="info"] button {
+//    justify-content: center;
+//}

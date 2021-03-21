@@ -1,0 +1,25 @@
+.root {
+    padding-bottom: 1px;
+    overflow: hidden;
+    //scroll-snap-type: x mandatory;
+    //-webkit-overflow-scrolling: touch;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+//.table {
+    //outline: 1px solid pink;
+    //padding-bottom: 1px;
+    //overflow: auto;
+    //scroll-snap-type: x mandatory;
+//}
+
+.group div {
+    background: yellow;
+}
+
+
+

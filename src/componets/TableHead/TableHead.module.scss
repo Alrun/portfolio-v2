@@ -1,0 +1,83 @@
+.root {
+    top: 0;
+    position: sticky;
+    z-index: 1;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.wrapper {
+    display: flex;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+}
+
+.fixed {
+    position: absolute;
+    left: 0;
+    display: flex;
+    z-index: 110;
+    height: 100%;
+    //border-right: 1px solid #ccc;
+    background: #fff;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .05);
+    pointer-events: none;
+}
+
+.activeLeft,
+.activeRight {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        bottom: 0;
+        width: 2px;
+        background: red;
+    }
+}
+
+.activeRight {
+
+    &::after {
+        right: -1px;
+    }
+}
+
+.activeLeft {
+
+    &::after {
+        left: -1px;
+    }
+}
+
+.resizing {
+    outline: 2px solid pink;
+}
+
+.reordering {
+    outline: 2px solid green;
+}
+
+.targetOverlay {
+    position: fixed;
+    //outline: 1px solid red;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    cursor: move;
+}
+

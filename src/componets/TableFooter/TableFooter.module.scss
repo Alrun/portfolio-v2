@@ -1,0 +1,21 @@
+.root {
+    bottom: 0;
+    position: sticky;
+    z-index: 1;
+}
+
+.container {
+    overflow-y: hidden;
+    //-webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    background: pink;
+}
+
+.scrollBar {
+    background: violet;
+    height: 1px;
+}
+
+
+

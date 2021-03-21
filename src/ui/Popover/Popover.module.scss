@@ -1,0 +1,67 @@
+.target {
+    //display: inline-block;
+    width: inherit;
+}
+
+.container {
+    z-index: 9999;
+    transition: visibility .12s 0s linear, opacity .12s 0s linear;
+    border-radius: 8px;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px 0 #ccc;
+    color: #ccc;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.show {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility .12s .5s linear, opacity .12s .5s linear;
+}
+
+// const Arrow = styled.div`
+//     width: 8px;
+//     height: 8px;
+//     z-index: 9998;
+//     ::before {
+//         position: absolute;
+//         width: 8px;
+//         height: 8px;
+//         z-index: 9998;
+//         content: '';
+//         border: 1px solid ${({ theme }) => theme.bg3};
+//         transform: rotate(45deg);
+//         background: ${({ theme }) => theme.bg2};
+//     }
+//     &.arrow-top {
+//         bottom: -5px;
+//         ::before {
+//             border-top: none;
+//             border-left: none;
+//         }
+//     }
+//     &.arrow-bottom {
+//         top: -5px;
+//         ::before {
+//             border-bottom: none;
+//             border-right: none;
+//         }
+//     }
+//     &.arrow-left {
+//         right: -5px;
+//         ::before {
+//             border-bottom: none;
+//             border-left: none;
+//         }
+//     }
+//     &.arrow-right {
+//         left: -5px;
+//         ::before {
+//             border-right: none;
+//             border-top: none;
+//         }
+//     }
+// `;
+
