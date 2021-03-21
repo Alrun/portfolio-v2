@@ -8,7 +8,7 @@ export interface TableHeadProps {
     // }[];
     handleReorder: ({ dragEl, targetEl }: any) => void;
     handleResize: (width: any, cursor: any) => void;
-    columns: any;
+    columns: TableColumnInterface[];
     tableRef: any;
     bodyRef: any;
 }

@@ -24,10 +24,9 @@
     display: flex;
     z-index: 110;
     height: 100%;
-    border-right: 1px solid #ccc;
+    //border-right: 1px solid #ccc;
     background: #fff;
 }
-
 
 .overlay {
     position: absolute;
@@ -66,18 +65,19 @@
 }
 
 .resizing {
-    outline: 2px solid red;
+    outline: 2px solid pink;
 }
 
 .reordering {
     outline: 2px solid green;
 }
 
-.dragCol {
+.targetOverlay {
     position: fixed;
-    outline: 1px solid red;
+    //outline: 1px solid red;
     top: 0;
     bottom: 0;
     width: inherit;
+    cursor: move;
 }
 

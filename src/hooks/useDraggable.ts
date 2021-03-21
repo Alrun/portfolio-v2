@@ -10,7 +10,7 @@ interface DraggableState {
     status: 'start' | 'move' | 'stop' | null;
 }
 
-export default function useDraggable(ref: React.RefObject<HTMLElement[]>, selector: string) {
+export default function useDraggable(nodeList: HTMLElement[], container?: string) {
     const [state, setState] = React.useState<DraggableState>({
         dragEl: null,
         targetEl: null,
@@ -22,14 +22,10 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
     });
 
     React.useEffect(() => {
-        const draggableList = ref.current;
+        if (!nodeList) return;
 
-        if (!draggableList) return;
-
-        draggableList.forEach((draggableEl) => {
-            const el: HTMLElement | null = draggableEl.getAttribute(selector)
-                ? draggableEl
-                : draggableEl.closest(selector);
+        nodeList.forEach((draggableEl) => {
+            const el: HTMLElement | null = container ? draggableEl.closest(`${container}`) : draggableEl;
 
             let initialX: number;
             let initialY: number;
@@ -127,7 +123,7 @@ export default function useDraggable(ref: React.RefObject<HTMLElement[]>, select
             draggableEl.addEventListener('mousedown', onMousedown);
             draggableEl.addEventListener('touchstart', onMousedown);
         });
-    }, [ref, selector]);
+    }, [nodeList, container]);
 
     return state;
 }

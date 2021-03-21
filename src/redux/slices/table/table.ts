@@ -5,77 +5,77 @@ import { TableState } from './table.d';
 const initialState: TableState = {
     columns: [
         {
-            head: [{ id: 'coin', title: 'Coin' }],
+            head: [{ id: 'coin', title: '1Coin' }],
             width: 200,
             order: 1,
             resizable: true,
-            draggable: true,
+            reorderable: true,
             fixed: true
         },
         {
             head: [
-                { id: 'quantity', title: 'Quantity' },
-                { id: 'current_value', title: 'Current Value Value' }
+                { id: 'quantity', title: '2Quantity' },
+                { id: 'current_value', title: '2Current Value Value' }
             ],
             width: 150,
             order: 2,
             align: 'end',
             resizable: true,
-            draggable: false
+            reorderable: false
             // fixed: true
         },
         {
             head: [
-                { id: 'buy_price', title: 'Buy Price' },
-                { id: 'current_price', title: 'Current Price' }
+                { id: 'buy_price', title: '3Buy Price' },
+                { id: 'current_price', title: '3Current Price' }
             ],
             width: 150,
             order: 3,
             align: 'end',
             resizable: false,
-            draggable: true
-            // fixed: true,
+            reorderable: true,
+            fixed: true,
             // hidden: true
         },
         {
             head: [
-                { id: 'change', title: 'Change' },
-                { id: 'fee', title: '(With Fee)' }
+                { id: 'change', title: '4Change' },
+                { id: 'fee', title: '4(With Fee)' }
             ],
             align: 'end',
             width: 150,
             order: 4,
             resizable: true,
-            draggable: true
+            reorderable: true
         },
         {
             head: [
-                { id: 'sold', title: 'Sold Coins' },
-                { id: 'gain', title: 'Gained' }
+                { id: 'sold', title: '5Sold Coins' },
+                { id: 'gain', title: '5Gained' }
             ],
             align: 'end',
             width: 150,
             order: 5,
             resizable: true,
-            draggable: true
+            reorderable: true
         },
         {
-            head: [{ id: 'quota', title: 'Quota' }],
+            head: [{ id: 'quota', title: '6Quota' }],
             width: 150,
             order: 6,
             align: 'center',
             resizable: true,
-            draggable: true
+            reorderable: true
         },
         {
             head: [
-                { id: 'wallet', title: 'Wallet' },
-                { id: 'date', title: 'Buy Date' }
+                { id: 'wallet', title: '7Wallet' },
+                { id: 'date', title: '7Buy Date' }
             ],
             width: 150,
             order: 7,
             resizable: true,
-            draggable: true
+            reorderable: true
             // hidden: true
         },
         {
@@ -84,7 +84,7 @@ const initialState: TableState = {
             order: 8,
             align: 'center',
             resizable: true,
-            draggable: true
+            reorderable: true
             // hidden: true
             // fixed: true
         }

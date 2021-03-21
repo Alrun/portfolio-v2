@@ -1,6 +1,9 @@
 import React from 'react';
 
 import classes from './TableHead.module.scss';
+import headCellClasses from '../TableHeadCell/TableHeadCell.module.scss';
+// import bodyCellClasses from '../TableHeadCell/TableHeadCell.module.scss';
+
 import { TableHeadProps } from './TableHead.d';
 
 import useDraggable from '../../hooks/useDraggable';
@@ -11,12 +14,13 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
     function TableHeadRef({ handleResize, handleReorder, columns, tableRef, bodyRef }: TableHeadProps, ref) {
         const rootRef = React.useRef<HTMLDivElement>(null);
         const columnItemsRef = React.useRef<HTMLDivElement[]>([]);
+        const reorderItemsRef = React.useRef<HTMLDivElement[]>([]);
         const resizeItemsRef = React.useRef<HTMLDivElement[]>([]);
 
         const rendersCount = React.useRef(0);
 
-        const visibleColumns = columns.filter((col: any) => !col.fixed && !col.hidden);
-        const fixedColumns = columns.filter((col: any) => col.fixed && !col.hidden);
+        const visibleColumns = columns.filter((col) => !col.fixed && !col.hidden);
+        const fixedColumns = columns.filter((col) => col.fixed && !col.hidden);
 
         const padding = fixedColumns.reduce((acc: any, cur: any) => {
             if (!cur.hidden) {
@@ -34,75 +38,89 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
 
         const addColumnRefs = React.useCallback((node) => {
             if (node) {
-                const reorderNode = node.querySelector('[data-draggable="toggle"]');
-                const resizeNode = node.querySelector('[data-resizable="toggle"]');
+                const resizeNode = node.querySelector('[data-resizable="true"]');
+                const reorderNode = node.querySelector('[data-reorderable="true"]');
 
-                if (reorderNode) {
-                    columnItemsRef.current.push(reorderNode);
-                }
+                if (resizeNode) resizeItemsRef.current.push(resizeNode);
+                if (reorderNode) reorderItemsRef.current.push(reorderNode);
 
-                if (resizeNode) {
-                    resizeItemsRef.current.push(resizeNode);
-                }
+                columnItemsRef.current.push(node);
             }
         }, []);
 
-        const drag = useDraggable(columnItemsRef, '[data-draggable="container"]');
-        const resize = useDraggable(resizeItemsRef, `.${resizeItemsRef.current[0]?.className}`);
+        const drag = useDraggable(reorderItemsRef.current, '[data-col-id]');
+        const resize = useDraggable(resizeItemsRef.current);
         /**
          * Resize column
          */
         React.useEffect(() => {
-            if (resize.dragEl && resize.status === 'start') {
-                document.body.style.cursor = 'col-resize';
+            if (resize.status === 'start') {
+                /**
+                 * Add class all head cells when drag start
+                 */
+                columnItemsRef.current.forEach((el) => {
+                    el.classList.add(headCellClasses.dragged);
+                });
+                /**
+                 * Add class of dragged head cell
+                 */
+                if (resize.dragEl) {
+                    const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
 
-                rootRef.current?.classList.add(classes.resizing);
+                    currentCol?.classList.add(headCellClasses.draggedActive);
+                }
+
+                document.body.style.cursor = 'col-resize';
 
                 console.log('start', resize);
             }
 
-            if (resize.dragEl && resize.status === 'move') {
-                const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
-                const id: string | undefined = currentCol?.dataset.colId;
-                const isFixed: boolean = !!currentCol?.closest(`.${classes.fixed}`);
+            if (resize.status === 'move') {
+                if (resize.dragEl) {
+                    const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
+                    const id: string | undefined = currentCol?.dataset.colId;
+                    const isFixed: boolean = !!currentCol?.closest(`.${classes.fixed}`);
 
-                if (id) {
-                    const initialWidth = columns.filter((col: any) => col.head[0].id === id)[0].width;
-                    const cells = tableRef.current.querySelectorAll(`[data-col-id=${id}]`);
+                    if (id) {
+                        const initialWidth = columns.filter((col: any) => col.head[0].id === id)[0].width;
+                        const cells = tableRef.current.querySelectorAll(`[data-col-id=${id}]`);
 
-                    cells.forEach((item: any) => {
-                        item.style.width = `${initialWidth + resize.deltaX}px`;
-                        item.style.minWidth = `${initialWidth + resize.deltaX}px`;
-                        item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
-                    });
+                        cells.forEach((item: any) => {
+                            item.style.width = `${initialWidth + resize.deltaX}px`;
+                            item.style.minWidth = `${initialWidth + resize.deltaX}px`;
+                            item.style.maxWidth = `${initialWidth + resize.deltaX}px`;
+                        });
 
-                    if (isFixed) {
-                        if (rootRef.current) {
-                            rootRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
-                        }
+                        if (isFixed) {
+                            if (rootRef.current) {
+                                rootRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
+                            }
 
-                        if (bodyRef.current) {
-                            bodyRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
+                            if (bodyRef.current) {
+                                bodyRef.current.style.paddingLeft = `${padding + resize.deltaX}px`;
+                            }
                         }
                     }
                 }
-
-                // if (currentCol?.closest(`.${classes.fixed}`)) {
-                //     console.log(tableRef.current);
-                // }
-
-                // console.log('move', resize.deltaX);
             }
 
-            if (resize.dragEl && resize.status === 'stop') {
-                const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
-                const id: string | undefined = currentCol?.dataset.colId;
+            if (resize.status === 'stop') {
+                if (resize.dragEl) {
+                    const currentCol: HTMLElement | null = resize.dragEl.closest(`[data-col-id]`);
+                    const id: string | undefined = currentCol?.dataset.colId;
 
-                if (currentCol && id) {
-                    handleResize(id, currentCol.offsetWidth);
+                    if (currentCol && id) {
+                        handleResize(id, currentCol.offsetWidth);
+                    }
                 }
+                /**
+                 * Remove classes head cells when drag stop
+                 */
+                columnItemsRef.current.forEach((el) => {
+                    el.classList.remove(headCellClasses.dragged);
+                    el.classList.remove(headCellClasses.draggedActive);
+                });
 
-                rootRef.current?.classList.remove(classes.resizing);
                 document.body.style.cursor = 'default';
 
                 console.log('stop ', resize);
@@ -112,89 +130,78 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
          * Reorder column
          */
         React.useEffect(() => {
-            if (drag.dragEl && drag.status === 'start') {
+            if (drag.status === 'start') {
+                if (drag.dragEl) {
+                    const draggedCol: HTMLDivElement | null = drag.dragEl.closest('[data-col-id]');
+
+                    if (draggedCol) {
+                        /**
+                         * Highlight body reorder column cells
+                         */
+                        bodyRef.current
+                            .querySelectorAll(`[data-col-id="${draggedCol.dataset.colId}"]`)
+                            .forEach((item: any) => {
+                                item.style.backgroundColor = '#ececec';
+                            });
+                        /**
+                         * Create overlay for dragged column
+                         */
+                        if (!tableRef.current.querySelector(`.${classes.overlay}`)) {
+                            const orderOverlay: HTMLDivElement = document.createElement('div');
+
+                            orderOverlay.classList.add(classes.overlay);
+                            orderOverlay.style.width = `${draggedCol.offsetWidth}px`;
+                            orderOverlay.style.left = `${draggedCol.offsetLeft}px`;
+
+                            bodyRef.current.append(orderOverlay);
+                        }
+
+                        draggedCol.classList.add(headCellClasses.dragged);
+                    }
+                    /**
+                     * Add overlay columns for correct drag target all over the screen
+                     */
+                    const targetCols = columnItemsRef.current.filter(
+                        (col) => col.dataset.colId !== draggedCol?.dataset.colId
+                    );
+
+                    targetCols.forEach((item) => {
+                        const colOverlay = document.createElement('span');
+
+                        colOverlay.classList.add(classes.targetOverlay);
+                        item.appendChild(colOverlay);
+                    });
+                }
+
                 document.body.style.cursor = 'move';
                 rootRef.current?.classList.add(classes.reordering);
-
-                columnItemsRef.current.forEach((item) => {
-                    const col = document.createElement('span');
-                    // const diameter = Math.max(button.clientWidth, button.clientHeight);
-                    // const radius = diameter / 2;
-                    //
-                    // // eslint-disable-next-line no-multi-assign
-                    // col.style.width = circle.style.height = `${diameter}px`;
-                    // circle.style.left = `${Math.round(event.clientX - button.getBoundingClientRect().left - radius)}px`;
-                    // circle.style.top = `${Math.round(event.clientY - button.getBoundingClientRect().top - radius)}px`;
-                    col.classList.add(classes.dragCol);
-                    //
-                    // const ripple = button.getElementsByClassName(classes.ripple)[0];
-                    //
-                    // if (ripple) {
-                    //     ripple.remove();
-                    // }
-                    //
-                    item.appendChild(col);
-                });
-
-                /**
-                 * Highlight reorder column cells
-                 */
-                tableRef.current
-                    ?.querySelectorAll(`[data-col-id="${drag.dragEl.dataset.colId}"]`)
-                    .forEach((item: any) => {
-                        item.style.backgroundColor = '#ececec';
-                    });
-                /**
-                 * Create reorder overlay
-                 */
-                if (!document.querySelector(`.${classes.overlay}`)) {
-                    const orderOverlay: HTMLDivElement = document.createElement('div');
-
-                    orderOverlay.classList.add(classes.overlay);
-
-                    if (rootRef && rootRef.current && rootRef.current.parentNode) {
-                        rootRef.current.parentNode.append(orderOverlay);
-                    }
-                }
-                /**
-                 * Set initial position & width for reorder overlay
-                 */
-                const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
-
-                if (orderOverlay) {
-                    orderOverlay.style.width = `${drag.dragEl.offsetWidth}px`;
-                    orderOverlay.style.left = `${drag.dragEl.offsetLeft}px`;
-                }
 
                 console.log('start', drag);
             }
 
-            if (drag.dragEl && drag.status === 'move') {
-                // const cols: NodeListOf<HTMLDivElement> | undefined = tableRef.current?.querySelectorAll(
-                //     `[data-col-id]`
-                // );
-                // const draggedCol = [...cols].filter((item) => item.dataset.colId === drag.dragEl?.dataset.colId)[0];
-                const draggedCol: HTMLDivElement | undefined | null = rootRef.current?.querySelector(
-                    `[data-col-id=${drag.dragEl?.dataset.colId}]`
-                );
-                const bodyCols = tableRef.current?.querySelectorAll(`[data-col-id]:not([data-draggable])`);
+            if (drag.status === 'move') {
+                if (drag.dragEl) {
+                    const draggedCol: HTMLDivElement | null = drag.dragEl.closest('[data-col-id]');
 
-                if (draggedCol) {
-                    /**
-                     * Apply drag effect
-                     */
-                    draggedCol.style.left = `${drag.deltaX}px`;
-                    draggedCol.style.zIndex = '1000';
-                    draggedCol.style.opacity = '0.5';
+                    if (draggedCol) {
+                        /**
+                         * Move dragged column overlay
+                         */
+                        const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
 
-                    const orderOverlay = document.querySelector<HTMLElement>(`.${classes.overlay}`);
-                    /**
-                     * Move dragged column overlay
-                     */
-                    if (orderOverlay) {
-                        orderOverlay.style.transform = `translate(${drag.deltaX}px, 0px)`;
+                        if (orderOverlay) {
+                            orderOverlay.style.transform = `translate(${drag.deltaX}px, 0px)`;
+                        }
+                        /**
+                         * Apply drag effect
+                         */
+                        draggedCol.style.left = `${drag.deltaX}px`;
+                        draggedCol.style.zIndex = '1000';
+                        draggedCol.style.opacity = '0.5';
                     }
                 }
+
+                const bodyCols = bodyRef.current?.querySelectorAll('[data-col-id]');
 
                 if (bodyCols) {
                     /**
@@ -233,94 +240,130 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                         }
                     });
                 }
-
+                // const cols: NodeListOf<HTMLDivElement> | undefined = tableRef.current?.querySelectorAll(
+                //     `[data-col-id]`
+                // );
+                // const draggedCol = [...cols].filter((item) => item.dataset.colId === drag.dragEl?.dataset.colId)[0];
+                // const draggedCol: HTMLDivElement | undefined | null = rootRef.current?.querySelector(
+                //     `[data-col-id=${drag.dragEl?.dataset.colId}]`
+                // );
                 // console.log('move', drag.initialX + drag.deltaX);
             }
 
             if (drag.status === 'stop') {
-                const cols: NodeListOf<HTMLElement> | undefined = tableRef.current?.querySelectorAll(`[data-col-id]`);
-                const orderOverlay: NodeListOf<HTMLElement> | undefined = tableRef.current?.querySelectorAll(
-                    `.${classes.overlay}`
-                );
+                const cells: NodeListOf<HTMLElement> | undefined = tableRef.current?.querySelectorAll(`[data-col-id]`);
+                /**
+                 * Remove overlay columns
+                 */
+                const targetOverlays = rootRef.current?.querySelectorAll(`.${classes.targetOverlay}`);
 
-                if (cols) {
-                    cols.forEach((item) => {
-                        item.style.backgroundColor = 'initial';
-                        item.classList.remove(classes.activeLeft);
-                        item.classList.remove(classes.activeRight);
-                    });
-                    /**
-                     * Remove drag column overlay
-                     */
-                    if (orderOverlay) {
-                        orderOverlay.forEach((item) => item.remove());
-                    }
-                    /**
-                     * Set initial styles for drag column
-                     */
-                    if (drag.dragEl) {
-                        const currentCol = [...cols].filter(
-                            (item) => drag.dragEl && item.dataset.colId === drag.dragEl.dataset.colId
-                        );
-
-                        currentCol[0].style.zIndex = 'auto';
-                        currentCol[0].style.left = `0px`;
-                        currentCol[0].style.opacity = '1';
-                    }
+                if (targetOverlays) {
+                    targetOverlays.forEach((item) => item.remove());
                 }
 
-                if (drag.dragEl && drag.targetEl) {
-                    const dragEl = {
-                        id: drag.dragEl.dataset.colId,
-                        order: Number(drag.dragEl.style.order)
-                    };
+                if (drag.dragEl) {
+                    if (cells) {
+                        cells.forEach((item) => {
+                            // item.style.backgroundColor = 'initial';
+                            item.classList.remove(classes.targetOverlay);
+                            item.classList.remove(classes.activeLeft);
+                            item.classList.remove(classes.activeRight);
+                        });
+                        /**
+                         * Remove drag column overlay
+                         */
+                        const orderOverlay: NodeListOf<HTMLElement> | undefined = bodyRef.current?.querySelectorAll(
+                            `.${classes.overlay}`
+                        );
 
-                    const targetEl = {
-                        id: drag.targetEl.dataset.colId,
-                        order: Number(drag.targetEl.style.order)
-                    };
+                        if (orderOverlay) {
+                            orderOverlay.forEach((item) => item.remove());
+                        }
+                        /**
+                         * Set initial styles for drag column
+                         */
+                        if (drag.dragEl) {
+                            const currentColCells = [...cells].filter(
+                                (item) => drag.dragEl && item.dataset.colId === drag.dragEl.dataset.colId
+                            );
+                            /**
+                             * Set new styles for head cell in dragged column
+                             */
+                            currentColCells[0].style.zIndex = 'auto';
+                            currentColCells[0].style.left = `0px`;
+                            currentColCells[0].style.opacity = '1';
+                            /**
+                             * Set initial background cells in dragged column
+                             */
+                            currentColCells.forEach((cel: any) => {
+                                cel.style.backgroundColor = 'initial';
+                            });
 
-                    const defineOrders = columnItemsRef.current.map((item) => {
-                        const el: HTMLElement | null = item.closest('[data-draggable="container"]');
-                        const elId: string | undefined = el?.dataset.colId;
-                        const elOrder: number = Number(el?.style.order);
-                        /**
-                         * Set drag element current order
-                         */
-                        if (elId === dragEl.id) {
-                            return {
-                                id: elId,
-                                order: Number(targetEl.order)
-                            };
+                            currentColCells[0].classList.remove(headCellClasses.dragged);
                         }
-                        /**
-                         * Reordering intermediate blocks when dragged to the right
-                         */
-                        if (dragEl.order > targetEl.order && elOrder < dragEl.order && elOrder >= targetEl.order) {
-                            return {
-                                id: elId,
-                                order: elOrder + 1
-                            };
-                        }
-                        /**
-                         * Reordering intermediate blocks when dragged to the left
-                         */
-                        if (dragEl.order < targetEl.order && elOrder > dragEl.order && elOrder <= targetEl.order) {
-                            return {
-                                id: elId,
-                                order: elOrder - 1
-                            };
-                        }
-                        /**
-                         * Fallback
-                         */
-                        return {
-                            id: elId,
-                            order: elOrder
+                    }
+
+                    const draggedCol: HTMLDivElement | null = drag.dragEl.closest('[data-col-id]');
+
+                    if (draggedCol && drag.targetEl) {
+                        const dragEl = {
+                            id: draggedCol.dataset.colId,
+                            order: Number(draggedCol.style.order)
                         };
-                    });
-                    console.log(defineOrders);
-                    handleReorder(defineOrders);
+
+                        const targetEl = {
+                            id: drag.targetEl.dataset.colId,
+                            order: Number(drag.targetEl.style.order)
+                        };
+
+                        const defineOrders = columnItemsRef.current.map((item) => {
+                            const elId: string | undefined = item?.dataset.colId;
+                            const elOrder: number = Number(item?.style.order);
+                            /**
+                             * Set drag element current order
+                             */
+                            if (elId === dragEl.id) {
+                                return {
+                                    id: elId,
+                                    order: Number(targetEl.order)
+                                };
+                            }
+                            /**
+                             * Reordering intermediate blocks when dragged to the right
+                             */
+                            if (dragEl.order > targetEl.order && elOrder < dragEl.order && elOrder >= targetEl.order) {
+                                return {
+                                    id: elId,
+                                    order: elOrder + 1
+                                };
+                            }
+                            /**
+                             * Reordering intermediate blocks when dragged to the left
+                             */
+                            if (dragEl.order < targetEl.order && elOrder > dragEl.order && elOrder <= targetEl.order) {
+                                return {
+                                    id: elId,
+                                    order: elOrder - 1
+                                };
+                            }
+                            /**
+                             * Fallback
+                             */
+                            return {
+                                id: elId,
+                                order: elOrder
+                            };
+                        });
+                        /**
+                         * Dispatch if the columns belong to the same parent
+                         */
+                        const dragElContainer = drag.dragEl.closest(`.${classes.fixed}`);
+                        const targetElContainer = drag.targetEl.closest(`.${classes.fixed}`);
+
+                        if (!dragElContainer === !targetElContainer) {
+                            handleReorder(defineOrders);
+                        }
+                    }
                 }
 
                 rootRef.current?.classList.remove(classes.reordering);
@@ -330,7 +373,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
             }
 
             // return () => console.log(111);
-        }, [drag, handleReorder, tableRef]);
+        }, [bodyRef, drag, handleReorder, tableRef]);
 
         return (
             <div ref={rootRef} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
@@ -345,7 +388,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                             item={item}
                                             align={item.align}
                                             ref={addColumnRefs}
-                                            isDraggable={item.draggable && fixedColumns.length > 1}
+                                            isReorderable={item.reorderable && fixedColumns.length > 1}
                                             isResizable={item.resizable}
                                         />
                                     ))}
@@ -357,7 +400,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                         item={item}
                                         align={item.align}
                                         ref={addColumnRefs}
-                                        isDraggable={item.draggable}
+                                        isReorderable={item.reorderable}
                                         isResizable={item.resizable}
                                     />
                                 ))}

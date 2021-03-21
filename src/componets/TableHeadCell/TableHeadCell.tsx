@@ -9,7 +9,7 @@ import Tooltip, { MouseoverTooltip } from '../../ui/Tooltip/Tooltip';
 
 const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
-    function TableHeadCellRef({ item, isDraggable, isResizable, align = 'start' }: TableHeadCellProps, ref) {
+    function TableHeadCellRef({ item, isReorderable, isResizable, align = 'start' }: TableHeadCellProps, ref) {
         const rippleRef = React.useRef<any>(null);
 
         const handleClick = (e: any) => {
@@ -23,14 +23,14 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
 
         const handleDropdown = (e: any) => console.log('dropdown');
 
-        console.log(item);
+        // console.log(item);
 
         return (
             <div
                 ref={ref}
                 data-col-id={item.head[0].id}
-                data-draggable="container"
-                className={classes.root}
+                // data-reorderable="container"
+                className={`${classes.root}`}
                 key={item.head[0].id}
                 style={{
                     minWidth: item.width,
@@ -39,23 +39,19 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
                     order: item.order
                 }}
             >
-                <div
-                    data-draggable="toggle"
-                    // data-draggable={isDraggable ? 'toggle' : false}
-                    className={isDraggable ? classes.reorder : `${classes.reorder} ${classes.hidden}`}
-                    // className={classes.reorder}
-                    aria-hidden="true"
-                >
-                    <span className={classes.iconWrapper}>
-                        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="10.1538" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            <rect x="4" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            <rect x="4" y="13.1905" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            <rect x="10.1538" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            <rect x="4" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                        </svg>
-                    </span>
-                </div>
+                {isReorderable && (
+                    <div data-reorderable="true" className={classes.reorder} aria-hidden="true">
+                        <span className={classes.iconWrapper}>
+                            <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10.1538" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
+                                <rect x="4" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
+                                <rect x="4" y="13.1905" width="3.84616" height="3.80953" fill="#AAAAAA" />
+                                <rect x="10.1538" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
+                                <rect x="4" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
+                            </svg>
+                        </span>
+                    </div>
+                )}
 
                 <div className={`${classes.container} ${classes[align]}`}>
                     <div className={classes.actions}>
@@ -106,12 +102,27 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
                         )}
                     </div>
                 </div>
-                <div
-                    data-resizable={isResizable ? 'toggle' : false}
-                    // data-resizable='toggle'
-                    className={classes.resizer}
-                    aria-hidden="true"
-                />
+                <div className={classes.resizer}>
+                    {isResizable && (
+                        <div
+                            data-resizable={!!isResizable}
+                            // data-resizable='toggle'
+                            className={classes.resizeTrigger}
+                            aria-hidden="true"
+                        />
+                    )}
+                    <div className={classes.separator} />
+                </div>
+                {/* <div className={classes.separator}> */}
+                {/*    {isResizable && ( */}
+                {/*        <div */}
+                {/*            data-resizable={!!isResizable} */}
+                {/*            // data-resizable='toggle' */}
+                {/*            className={classes.resizer} */}
+                {/*            aria-hidden="true" */}
+                {/*        /> */}
+                {/*    )} */}
+                {/* </div> */}
             </div>
         );
     }

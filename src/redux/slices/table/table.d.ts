@@ -17,7 +17,7 @@ export interface TableColumnInterface {
     }[];
     align?: 'start' | 'center' | 'end';
     resizable?: boolean;
-    draggable?: boolean;
+    reorderable?: boolean;
     hidden?: boolean;
     fixed?: boolean;
 }

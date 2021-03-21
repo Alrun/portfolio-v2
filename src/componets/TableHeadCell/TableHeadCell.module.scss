@@ -84,7 +84,7 @@
     border: none;
     padding: 0;
     //outline: 1px solid green;
-    //opacity: 0;
+    opacity: 0;
     transition: opacity .12s;
 
     &:hover {
@@ -161,7 +161,7 @@
     margin-top: 2px;
     z-index: 100;
     overflow: hidden;
-    //opacity: 0;
+    opacity: 0;
     //outline: 1px solid red;
     cursor: move;
     transition: opacity .12s;
@@ -177,6 +177,8 @@
     }
 }
 
+
+
 .resizer {
     position: absolute;
     top: 0;
@@ -186,38 +188,85 @@
     //outline: 1px solid purple;
     //background: yellow;
     z-index: 10;
-    opacity: 0.2;
-    transition: opacity .12s;
+    //opacity: 0.2;
+    //transition: opacity .12s;
 
     touch-action: none; // prevents from scrolling while dragging on touch devices
     //pointer-events: none;
 
-    &::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 2px;
-        background: #000;
-        //opacity: 0;
-    }
+
 }
 
-[data-resizable="toggle"] {
+.separator {
+    //content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 2px;
+    background: #000;
+    pointer-events: none;
+    opacity: 0.2;
+
+}
+
+.resizeTrigger {
     cursor: col-resize;
+    height: 100%;
 
-    &:hover {
+    &:hover .separator {
         opacity: 1;
-
-        &::after {
-            opacity: 1;
-            //outline: 1px solid red;
-        }
     }
 }
+
+.resizeEl {
+    .separator {
+        opacity: 1;
+    }
+}
+
+
+.dragged {
+    //outline: 5px solid rebeccapurple;
+    .reorder {
+        visibility: hidden;
+    }
+
+    .actions {
+        visibility: hidden;
+    }
+}
+
+.draggedActive {
+
+    .labels {
+        //outline: 3px solid #ff602f;
+        pointer-events: none;
+    }
+
+    .reorder {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    //.actions {
+    //    opacity: 0;
+    //}
+}
+//[data-resizable="true"] {
+//
+//
+//    &:hover {
+//        opacity: 1;
+//
+//        &::after {
+//            opacity: 1;
+//            //outline: 1px solid red;
+//        }
+//    }
+//}
 
 .dots {
     user-select: none;

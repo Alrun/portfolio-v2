@@ -1,6 +1,6 @@
 export interface TableHeadCellProps {
     item: any;
-    isDraggable?: boolean;
+    isReorderable?: boolean;
     isResizable?: boolean;
     align?: 'start' | 'center' | 'end';
 }
