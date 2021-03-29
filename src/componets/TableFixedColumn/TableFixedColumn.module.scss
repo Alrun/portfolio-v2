@@ -2,9 +2,11 @@
     position: absolute;
     left: 0;
     border-right: 1px solid #ccc;
-    background: #fff;
+    background: inherit;
+    z-index: 1;
 }
 
 .collapse {
-    outline: 1px solid pink;
+    font-weight: bold;
+    //outline: 1px solid pink;
 }

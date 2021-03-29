@@ -29,8 +29,9 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
 
         return (
             <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
+                {!!fixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
+
                 <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
-                    {!!fixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
                     {!!items.length &&
                         items.map((item) =>
                             item.group?.length ? (
@@ -46,8 +47,8 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
                                 <TableRow key={item.id} item={item} columns={columns} />
                             )
                         )}
-                    ){/* eslint-disable-next-line no-plusplus */}
-                    <b>Table Body RENDER COUNT: {++rendersCount.current}</b>
+                    {/* eslint-disable-next-line no-plusplus */}
+                    <b style={{ position: 'absolute', top: '130px' }}>Table Body RENDER COUNT: {++rendersCount.current}</b>
                 </div>
             </div>
         );

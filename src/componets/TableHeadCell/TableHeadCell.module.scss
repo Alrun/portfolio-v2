@@ -1,5 +1,6 @@
 .root {
     display: flex;
+    height: 100%;
     //flex-direction: column;
     position: relative;
     align-items: center;
@@ -151,31 +152,7 @@
     max-width: 100%;
 }
 
-.reorder {
-    position: absolute;
-    min-height: 20px;
-    top: 0;
-    bottom: 50%;
-    left: 0;
-    width: 20px;
-    margin-top: 2px;
-    z-index: 100;
-    overflow: hidden;
-    opacity: 0;
-    //outline: 1px solid red;
-    cursor: move;
-    transition: opacity .12s;
-    touch-action: none; // prevents from scrolling while dragging on touch devices
 
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 25px;
-        //background-image: url('../../assets/icons/dots-square.svg');
-        //background-repeat: no-repeat;
-    }
-}
 
 
 

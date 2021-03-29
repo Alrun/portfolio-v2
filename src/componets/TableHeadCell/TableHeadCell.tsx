@@ -9,7 +9,7 @@ import Tooltip, { MouseoverTooltip } from '../../ui/Tooltip/Tooltip';
 
 const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
-    function TableHeadCellRef({ item, isReorderable, isResizable, align = 'start' }: TableHeadCellProps, ref) {
+    function TableHeadCellRef({ item, isResizable, align = 'start' }: TableHeadCellProps, ref) {
         const rippleRef = React.useRef<any>(null);
 
         const handleClick = (e: any) => {
@@ -27,32 +27,13 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
 
         return (
             <div
-                ref={ref}
-                data-col-id={item.head[0].id}
+
+                // data-col-id={item.head[0].id}
                 // data-reorderable="container"
                 className={`${classes.root}`}
-                key={item.head[0].id}
-                style={{
-                    minWidth: item.width,
-                    width: item.width,
-                    maxWidth: item.width,
-                    order: item.order
-                }}
-            >
-                {isReorderable && (
-                    <div data-reorderable="true" className={classes.reorder} aria-hidden="true">
-                        <span className={classes.iconWrapper}>
-                            <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="10.1538" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="13.1905" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="10.1538" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            </svg>
-                        </span>
-                    </div>
-                )}
+                // key={item.head[0].id}
 
+            >
                 <div className={`${classes.container} ${classes[align]}`}>
                     <div className={classes.actions}>
                         <button

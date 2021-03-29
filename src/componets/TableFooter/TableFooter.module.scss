@@ -2,6 +2,8 @@
     bottom: 0;
     position: sticky;
     z-index: 1;
+    background: inherit;
+    padding-top: 55px;
 }
 
 .container {
@@ -9,12 +11,38 @@
     //-webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
-    background: pink;
+    //background: pink;
+
+    &::-webkit-scrollbar {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+        //background: linear-gradient(to right, rgba(0, 0, 0, 0) 2px, #aaa 2px, #aaa 5px, rgba(0, 0, 0, 0) 5px);
+        background: #e3e3e3;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #b7b7b7;
+        border-radius: 50px;
+    }
 }
 
 .scrollBar {
-    background: violet;
+    //background: violet;
     height: 1px;
+}
+
+.actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 255, 0, .25);
+    padding: 15px 15px 25px;
+    z-index: -1;
 }
 
 

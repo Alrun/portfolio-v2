@@ -18,10 +18,14 @@ const TableFooter = React.forwardRef<HTMLDivElement, TableFooterProps>(
         return (
             <div className={classes.root}>
                 <div ref={ref} className={classes.container}>
-                    <b style={{ position: 'absolute', bottom: '20px' }}>
-                        {/* eslint-disable-next-line no-plusplus */}
-                        Table Footer RENDER COUNT: {++rendersCount.current}
-                    </b>
+
+                    <div className={classes.actions}>
+                        <span>Table Footer Actions</span>
+                        <b style={{marginLeft: 'auto'}}>
+                            {/* eslint-disable-next-line no-plusplus */}
+                            Table Footer RENDER COUNT: {++rendersCount.current}
+                        </b>
+                    </div>
 
                     <div
                         className={classes.scrollBar}

@@ -101,7 +101,7 @@ export default function Table() {
             </div>
 
             {/* eslint-disable-next-line no-plusplus */}
-            <b>Table RENDER COUNT: {++rendersCount.current}</b>
+            <b style={{ position: 'absolute', top: '130px' }}>Table RENDER COUNT: {++rendersCount.current}</b>
         </div>
     );
 }

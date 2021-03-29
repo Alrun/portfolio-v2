@@ -105,8 +105,10 @@ export const table = createSlice({
     initialState,
     reducers: {
         reorder: (state, { payload }: PayloadAction<any>) => {
+                console.log('payload ', payload);
             state.columns.forEach((item) => {
                 const currentCol = payload.filter((el: { id: string }) => el.id === item.head[0].id);
+
 
                 if (currentCol.length) {
                     // eslint-disable-next-line no-param-reassign
