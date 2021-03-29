@@ -8,8 +8,7 @@ import { TableHeadProps } from './TableHead.d';
 
 import useDraggable from '../../hooks/useDraggable';
 import TableHeadCell from '../TableHeadCell/TableHeadCell';
-import Draggable from '../Draggable/Draggable';
-import TableDraggable from '../TableDraggable/TableDraggable';
+import TableReorder, { TableReorderItem } from '../TableReorder/TableReorder';
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
@@ -133,17 +132,16 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                 {columns && (
                     <>
                         <div className={classes.fixed}>
-                            <TableDraggable
-                                id="drop-1"
+                            <TableReorder
+                                id="reorder-fixed"
                                 bodyRef={bodyRef}
                                 headRef={rootRef}
                                 handleReorder={handleReorder}
                             >
-                                {fixedColumns.map((item: any, index) => (
-                                    <Draggable
+                                {fixedColumns.map((item: any) => (
+                                    <TableReorderItem
                                         key={item.head[0].id}
                                         id={item.head[0].id}
-                                        index={index}
                                         isDraggable={item.reorderable && fixedColumns.length > 1}
                                     >
                                         <TableHeadCell
@@ -152,22 +150,21 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                             ref={addColumnRefs}
                                             isResizable={item.resizable}
                                         />
-                                    </Draggable>
+                                    </TableReorderItem>
                                 ))}
-                            </TableDraggable>
+                            </TableReorder>
                         </div>
                         <div ref={ref} className={classes.container}>
-                            <TableDraggable
-                                id="drop-2"
+                            <TableReorder
+                                id="reorder"
                                 bodyRef={bodyRef}
                                 headRef={rootRef}
                                 handleReorder={handleReorder}
                             >
-                                {visibleColumns.map((item: any, index) => (
-                                    <Draggable
+                                {visibleColumns.map((item: any) => (
+                                    <TableReorderItem
                                         key={item.head[0].id}
                                         id={item.head[0].id}
-                                        index={index}
                                         isDraggable={item.reorderable}
                                     >
                                         <TableHeadCell
@@ -176,9 +173,9 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                             ref={addColumnRefs}
                                             isResizable={item.resizable}
                                         />
-                                    </Draggable>
+                                    </TableReorderItem>
                                 ))}
-                            </TableDraggable>
+                            </TableReorder>
                         </div>
                     </>
                 )}

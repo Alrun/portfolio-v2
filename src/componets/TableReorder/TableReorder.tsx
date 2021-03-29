@@ -1,7 +1,24 @@
 import React from 'react';
-import classes from './TableDraggable.module.scss';
+import classes from './TableReorder.module.scss';
 
-const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) => {
+interface TableReorderItemProps {
+    key: string;
+    id: string;
+    isDraggable: boolean;
+    children: JSX.Element;
+}
+
+export const TableReorderItem: React.FC<TableReorderItemProps> = (props: TableReorderItemProps) => props.children;
+
+interface TableReorderProps {
+    id: string;
+    headRef: React.RefObject<HTMLDivElement>;
+    bodyRef: React.RefObject<HTMLDivElement>;
+    handleReorder: (orders: any) => void;
+    children: JSX.Element | JSX.Element[];
+}
+
+const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableReorderProps) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const draggableItemsRef = React.useRef<HTMLDivElement[]>([]);
     const rendersCount = React.useRef(0);
@@ -14,7 +31,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
         if (!draggableItemsRef.current) return;
 
         const container = rootRef.current?.parentElement;
-        const otherScopesItems = headRef.current.querySelectorAll(`.${classes.root}:not(#${id}) .${classes.dragItem}`);
+        const otherScopesItems = headRef.current?.querySelectorAll(`.${classes.root}:not(#${id}) .${classes.dragItem}`);
         const scopeIdList: string[] = [];
         /**
          * Define IDs of dragged items in the current container
@@ -46,7 +63,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                  */
                 const orderOverlay = bodyRef.current?.querySelector(`.${classes.overlay}`);
 
-                if (orderOverlay) {
+                if (orderOverlay instanceof HTMLElement) {
                     orderOverlay.style.transform = `translate(${deltaX}px, 0px)`;
                 }
                 /**
@@ -57,37 +74,41 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                  * Add class to highlight target column when dragging to the right or left
                  */
                 // const targetColumns = bodyRef.current.querySelectorAll(`[data-id]:not([data-id="${'tt'}"])`)
-                const bodyCellsScope = bodyRef.current.querySelectorAll('[data-id]');
+                const bodyCellsScope: NodeListOf<HTMLElement> | undefined = bodyRef.current?.querySelectorAll(
+                    '[data-id]'
+                );
 
                 // console.log(bodyCellsScope);
-                [...bodyCellsScope]
-                    .filter((item) => scopeIdList.includes(item.dataset.id))
-                    .forEach((item: any) => {
-                        const correction = -1; // Border corrected delta
-                        const right =
-                            deltaX >= 0 &&
-                            initialX + deltaX + correction > item.getBoundingClientRect().left &&
-                            initialX + deltaX + correction < item.getBoundingClientRect().left + item.offsetWidth;
-                        const left =
-                            deltaX < 0 &&
-                            initialX + deltaX - correction > item.getBoundingClientRect().left &&
-                            initialX + deltaX - correction < item.getBoundingClientRect().left + item.offsetWidth;
+                if (bodyCellsScope) {
+                    [...bodyCellsScope]
+                        .filter((item) => (item.dataset.id ? scopeIdList.includes(item.dataset.id) : false))
+                        .forEach((item: any) => {
+                            const correction = -1; // Border corrected delta
+                            const right =
+                                deltaX >= 0 &&
+                                initialX + deltaX + correction > item.getBoundingClientRect().left &&
+                                initialX + deltaX + correction < item.getBoundingClientRect().left + item.offsetWidth;
+                            const left =
+                                deltaX < 0 &&
+                                initialX + deltaX - correction > item.getBoundingClientRect().left &&
+                                initialX + deltaX - correction < item.getBoundingClientRect().left + item.offsetWidth;
 
-                        if (right) {
-                            item.classList.add(classes.activeRight);
-                            /**
-                             * Add class to highlight for dragged column
-                             */
-                            if (deltaX < draggableEl.offsetWidth && item.dataset.id === draggableEl?.dataset.id) {
+                            if (right) {
+                                item.classList.add(classes.activeRight);
+                                /**
+                                 * Add class to highlight for dragged column
+                                 */
+                                if (deltaX < draggableEl.offsetWidth && item.dataset.id === draggableEl?.dataset.id) {
+                                    item.classList.add(classes.activeLeft);
+                                }
+                            } else if (left) {
                                 item.classList.add(classes.activeLeft);
+                            } else {
+                                item.classList.remove(classes.activeLeft);
+                                item.classList.remove(classes.activeRight);
                             }
-                        } else if (left) {
-                            item.classList.add(classes.activeLeft);
-                        } else {
-                            item.classList.remove(classes.activeLeft);
-                            item.classList.remove(classes.activeRight);
-                        }
-                    });
+                        });
+                }
             }
 
             /**
@@ -212,7 +233,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                     draggableOverlay.forEach((item) => item.remove());
                 }
 
-                bodyRef.current.querySelectorAll(`[data-id="${draggableEl.dataset.id}"]`).forEach((item: any) => {
+                bodyRef.current?.querySelectorAll(`[data-id="${draggableEl.dataset.id}"]`).forEach((item: any) => {
                     item.style.backgroundColor = 'inherit';
                 });
 
@@ -243,7 +264,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                 document.body.style.cursor = 'default';
                 draggableEl.style.pointerEvents = 'auto';
 
-                otherScopesItems.forEach((item: any) => {
+                otherScopesItems?.forEach((item: any) => {
                     item.classList.remove(classes.dragged);
                     item.style.cursor = 'auto';
                 });
@@ -274,7 +295,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                 /**
                  * Highlight body reorder column cells
                  */
-                bodyRef.current.querySelectorAll(`[data-id="${draggableEl.dataset.id}"]`).forEach((item: any) => {
+                bodyRef.current?.querySelectorAll(`[data-id="${draggableEl.dataset.id}"]`).forEach((item: any) => {
                     item.style.backgroundColor = '#ececec';
 
                     item.classList.add(classes.activeLeft);
@@ -282,7 +303,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                 /**
                  * Create overlay for dragged column
                  */
-                if (!bodyRef.current.querySelector(`.${classes.overlay}`)) {
+                if (bodyRef.current && !bodyRef.current?.querySelector(`.${classes.overlay}`)) {
                     const orderOverlay: HTMLDivElement = document.createElement('div');
 
                     orderOverlay.classList.add(classes.overlay);
@@ -302,13 +323,14 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                  */
                 draggableNotCurrent.forEach((item) => {
                     const colOverlay = document.createElement('div');
-                    const offset = item.offsetLeft + (bodyRef.current?.parentNode.offsetLeft || 0);
+                    const parent: HTMLElement | null | undefined = bodyRef.current?.parentElement;
+                    const offset = item.offsetLeft + (parent?.offsetLeft || 0);
 
                     colOverlay.classList.add(classes.targetOverlay);
                     colOverlay.style.width = `${item.offsetWidth}px`;
 
                     if (container?.scrollLeft) {
-                        colOverlay.style.left = `${offset - bodyRef.current.scrollLeft}px`;
+                        colOverlay.style.left = `${offset - (bodyRef.current ? bodyRef.current.scrollLeft : 0)}px`;
                     } else {
                         colOverlay.style.left = `${offset}px`;
                     }
@@ -316,7 +338,7 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
                     item.appendChild(colOverlay);
                 });
 
-                otherScopesItems.forEach((item: any) => {
+                otherScopesItems?.forEach((item: any) => {
                     item.classList.add(classes.dragged);
                     item.style.cursor = 'not-allowed';
                 });
@@ -374,4 +396,4 @@ const TableDraggable = ({ id, bodyRef, headRef, handleReorder, children }: any) 
     );
 };
 
-export default TableDraggable;
+export default TableReorder;
