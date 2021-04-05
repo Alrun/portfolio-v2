@@ -10,7 +10,7 @@ interface DraggableState {
     status: 'start' | 'move' | 'stop' | null;
 }
 
-export default function useDraggable(nodeList: HTMLElement[], container?: string) {
+export default function useDraggable(draggableEl: HTMLDivElement | null, container?: string) {
     const [state, setState] = React.useState<DraggableState>({
         dragEl: null,
         targetEl: null,
@@ -22,108 +22,106 @@ export default function useDraggable(nodeList: HTMLElement[], container?: string
     });
 
     React.useEffect(() => {
-        if (!nodeList) return;
+        if (!draggableEl) return;
 
-        nodeList.forEach((draggableEl) => {
-            const el: HTMLElement | null = container ? draggableEl.closest(`${container}`) : draggableEl;
+        const el: HTMLElement | null = container ? draggableEl.closest(`${container}`) : draggableEl;
 
-            let initialX: number;
-            let initialY: number;
-            let deltaX: number;
-            let deltaY: number;
+        let initialX: number;
+        let initialY: number;
+        let deltaX: number;
+        let deltaY: number;
 
-            function onMouseMove(e: any) {
-                if (e.type === 'touchmove') {
-                    deltaX = e.changedTouches[0].clientX - initialX;
-                    deltaY = e.changedTouches[0].clientY - initialY;
-                } else {
-                    deltaX = e.clientX - initialX;
-                    deltaY = e.clientY - initialY;
-                }
-
-                if (el) {
-                    setState({
-                        dragEl: el,
-                        targetEl: null,
-                        initialX,
-                        initialY,
-                        deltaX,
-                        deltaY,
-                        status: 'move'
-                    });
-                }
+        function onMouseMove(e: any) {
+            if (e.type === 'touchmove') {
+                deltaX = e.changedTouches[0].clientX - initialX;
+                deltaY = e.changedTouches[0].clientY - initialY;
+            } else {
+                deltaX = e.clientX - initialX;
+                deltaY = e.clientY - initialY;
             }
 
-            function onMouseUp(e: any) {
-                let targetEl;
+            if (el) {
+                setState({
+                    dragEl: el,
+                    targetEl: null,
+                    initialX,
+                    initialY,
+                    deltaX,
+                    deltaY,
+                    status: 'move'
+                });
+            }
+        }
 
-                if (el) el.style.visibility = 'hidden';
+        function onMouseUp(e: any) {
+            let targetEl;
 
-                if (e.type === 'touchend') {
-                    targetEl = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            if (el) el.style.visibility = 'hidden';
 
-                    window.removeEventListener('touchmove', onMouseMove);
-                    window.removeEventListener('touchend', onMouseUp);
-                } else {
-                    targetEl = document.elementFromPoint(e.clientX, e.clientY);
+            if (e.type === 'touchend') {
+                targetEl = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
 
-                    window.removeEventListener('mousemove', onMouseMove);
-                    window.removeEventListener('mouseup', onMouseUp);
-                }
+                window.removeEventListener('touchmove', onMouseMove);
+                window.removeEventListener('touchend', onMouseUp);
+            } else {
+                targetEl = document.elementFromPoint(e.clientX, e.clientY);
 
-                if (el) {
-                    /**
-                     * Hide draggable element for define target element
-                     */
-                    el.style.visibility = 'visible';
-
-                    setState({
-                        dragEl: el,
-                        targetEl: targetEl ? targetEl.closest('[data-col-id]') : null,
-                        initialX,
-                        initialY,
-                        deltaX: 0,
-                        deltaY: 0,
-                        status: 'stop'
-                    });
-                }
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
             }
 
-            function onMousedown(e: any) {
-                if (e.type === 'touchstart') {
-                    initialX = e.changedTouches[0].clientX;
-                    initialY = e.changedTouches[0].clientY;
+            if (el) {
+                /**
+                 * Hide draggable element for define target element
+                 */
+                el.style.visibility = 'visible';
 
-                    window.addEventListener('touchmove', onMouseMove);
-                    window.addEventListener('touchend', onMouseUp);
-                } else {
-                    if (e.button !== 0) return; // only left mouse button
+                setState({
+                    dragEl: el,
+                    targetEl: targetEl ? targetEl.closest('[data-col-id]') : null,
+                    initialX,
+                    initialY,
+                    deltaX: 0,
+                    deltaY: 0,
+                    status: 'stop'
+                });
+            }
+        }
 
-                    initialX = e.clientX;
-                    initialY = e.clientY;
+        function onMousedown(e: any) {
+            if (e.type === 'touchstart') {
+                initialX = e.changedTouches[0].clientX;
+                initialY = e.changedTouches[0].clientY;
 
-                    window.addEventListener('mousemove', onMouseMove);
-                    window.addEventListener('mouseup', onMouseUp);
-                }
+                window.addEventListener('touchmove', onMouseMove);
+                window.addEventListener('touchend', onMouseUp);
+            } else {
+                if (e.button !== 0) return; // only left mouse button
 
-                if (el) {
-                    setState({
-                        dragEl: el,
-                        targetEl: null,
-                        initialX,
-                        initialY,
-                        deltaX,
-                        deltaY,
-                        status: 'start'
-                    });
-                }
+                initialX = e.clientX;
+                initialY = e.clientY;
+
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
             }
 
-            draggableEl.addEventListener('dragstart', (e) => e.preventDefault());
-            draggableEl.addEventListener('mousedown', onMousedown);
-            draggableEl.addEventListener('touchstart', onMousedown);
-        });
-    }, [nodeList, container]);
+            if (el) {
+                setState({
+                    dragEl: el,
+                    targetEl: null,
+                    initialX,
+                    initialY,
+                    deltaX,
+                    deltaY,
+                    status: 'start'
+                });
+            }
+        }
+
+        draggableEl.addEventListener('dragstart', (e) => e.preventDefault());
+        draggableEl.addEventListener('mousedown', onMousedown);
+        draggableEl.addEventListener('touchstart', onMousedown);
+    }, [draggableEl, container]);
 
     return state;
 }

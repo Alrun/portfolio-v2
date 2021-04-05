@@ -1,0 +1,49 @@
+
+
+.root {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -11px;
+    width: 20px;
+    //outline: 1px solid purple;
+    //background: yellow;
+    z-index: 10;
+    //opacity: 0.2;
+    //transition: opacity .12s;
+
+    touch-action: none; // prevents from scrolling while dragging on touch devices
+    //pointer-events: none;
+
+
+}
+
+.separator {
+    //content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 2px;
+    background: #000;
+    pointer-events: none;
+    opacity: 0.2;
+
+}
+
+.resizeTrigger {
+    cursor: col-resize;
+    height: 100%;
+
+    &:hover .separator {
+        opacity: 1;
+    }
+}
+
+.resizeEl {
+    .separator {
+        opacity: 1;
+    }
+}

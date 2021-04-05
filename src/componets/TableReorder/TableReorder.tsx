@@ -1,24 +1,19 @@
 import React from 'react';
+
 import classes from './TableReorder.module.scss';
-
-interface TableReorderItemProps {
-    key: string;
-    id: string;
-    isDraggable: boolean;
-    children: JSX.Element;
-}
-
-export const TableReorderItem: React.FC<TableReorderItemProps> = (props: TableReorderItemProps) => props.children;
+import headItemClasses from '../TableHeadItem/TableHeadItem.module.scss';
+import TableHeadItem from '../TableHeadItem/TableHeadItem';
 
 interface TableReorderProps {
     id: string;
+    width: number;
     headRef: React.RefObject<HTMLDivElement>;
     bodyRef: React.RefObject<HTMLDivElement>;
     handleReorder: (orders: any) => void;
     children: JSX.Element | JSX.Element[];
 }
 
-const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableReorderProps) => {
+const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: TableReorderProps) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const draggableItemsRef = React.useRef<HTMLDivElement[]>([]);
     const rendersCount = React.useRef(0);
@@ -44,11 +39,10 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
             let initialX: number;
             let deltaX: number;
 
-            const dragTrigger = draggableEl.querySelector(`.${classes.dragTrigger}`);
+            const dragTrigger = draggableEl.querySelector(`.${headItemClasses.dragTrigger}`);
             const draggableNotCurrent = draggableItemsRef.current.filter(
                 (el) => el.dataset.id !== draggableEl.dataset.id
             );
-
             /**
              * Drag move
              */
@@ -73,12 +67,10 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
                 /**
                  * Add class to highlight target column when dragging to the right or left
                  */
-                // const targetColumns = bodyRef.current.querySelectorAll(`[data-id]:not([data-id="${'tt'}"])`)
                 const bodyCellsScope: NodeListOf<HTMLElement> | undefined = bodyRef.current?.querySelectorAll(
                     '[data-id]'
                 );
 
-                // console.log(bodyCellsScope);
                 if (bodyCellsScope) {
                     [...bodyCellsScope]
                         .filter((item) => (item.dataset.id ? scopeIdList.includes(item.dataset.id) : false))
@@ -132,7 +124,7 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
                 }
 
                 if (dragTarget) {
-                    const currentDragTarget: HTMLDivElement | null = dragTarget.closest(`.${classes.dragItem}`);
+                    const currentDragTarget: HTMLDivElement | null = dragTarget.closest(`.${headItemClasses.dragItem}`);
 
                     if (currentDragTarget) {
                         const dragEl = {
@@ -189,13 +181,8 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
                         // const dragElContainer = drag.dragEl.closest(`.${classes.fixed}`);
                         // const targetElContainer = drag.targetEl.closest(`.${classes.fixed}`);
 
-                        // if (!dragElContainer === !targetElContainer) {
                         handleReorder(defineOrders);
                     }
-
-                    // }
-
-                    // console.log('target ', dragTarget);
                 }
                 /**
                  * Set initial styles for drag column
@@ -216,7 +203,6 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
 
                 if (cells) {
                     cells.forEach((item) => {
-                        // item.style.backgroundColor = 'initial';
                         item.classList.remove(classes.targetOverlay);
                         item.classList.remove(classes.activeLeft);
                         item.classList.remove(classes.activeRight);
@@ -358,35 +344,8 @@ const TableReorder = ({ id, bodyRef, headRef, handleReorder, children }: TableRe
 
     return (
         <>
-            <div ref={rootRef} id={id} className={classes.root}>
-                {React.Children.map(children, (child) => (
-                    <div
-                        data-id={child.props.id}
-                        ref={addDraggableItems}
-                        className={classes.dragItem}
-                        style={{
-                            minWidth: child.props.children.props.item.width,
-                            width: child.props.children.props.item.width,
-                            maxWidth: child.props.children.props.item.width,
-                            order: child.props.children.props.item.order
-                        }}
-                    >
-                        {child.props.isDraggable && (
-                            <div className={classes.dragTrigger} aria-hidden="true">
-                                <span className={classes.iconWrapper}>
-                                    <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="10.1538" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                        <rect x="4" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                        <rect x="4" y="13.1905" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                        <rect x="10.1538" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                        <rect x="4" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                    </svg>
-                                </span>
-                            </div>
-                        )}
-                        {child}
-                    </div>
-                ))}
+            <div ref={rootRef} id={id} className={classes.root} style={{minWidth: width}}>
+                {React.Children.map(children, (child) => <TableHeadItem ref={addDraggableItems} {...child.props} />)}
             </div>
             <b style={{ position: 'absolute', top: '80px' }}>
                 {/* eslint-disable-next-line no-plusplus */}

@@ -30,6 +30,7 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": "warn",
         "no-param-reassign": "warn",
         "react/jsx-props-no-spreading": "warn",
-        "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }]
+        "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }],
+        "react/require-default-props": ["off", { "forbidDefaultForRequired": false, "ignoreFunctionalComponents": true }]
     }
 }
