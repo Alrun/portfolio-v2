@@ -1,0 +1,60 @@
+.root {
+    display: flex;
+}
+
+.targetOverlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: inherit;
+    cursor: move;
+    z-index: 100;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .05);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.activeLeft,
+.activeRight {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        bottom: 0;
+        width: 2px;
+        background: #ccc;
+    }
+}
+
+.activeRight {
+
+    &::after {
+        right: -1px;
+    }
+}
+
+.activeLeft {
+
+    &::after {
+        left: -1px;
+    }
+}
+
+:global(.dragging) {
+
+    & .root {
+        pointer-events: none;
+    }
+}
+
+:global(.drag-active) {
+    pointer-events: none;
+}

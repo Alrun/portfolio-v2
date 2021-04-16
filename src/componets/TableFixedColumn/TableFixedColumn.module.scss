@@ -1,10 +1,11 @@
 .root {
     position: absolute;
     left: 0;
-    border-right: 1px solid #ccc;
+    z-index: 1;
     background: #fff;
 }
 
 .collapse {
-    outline: 1px solid pink;
+    font-weight: bold;
+    //outline: 1px solid pink;
 }

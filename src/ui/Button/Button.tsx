@@ -1,7 +1,8 @@
 import React from 'react';
 
-import './button.scss';
+import classes from './Button.module.scss';
 import Ripple from '../Ripple/Ripple';
+import { RippleProps } from '../Ripple/Ripple.d';
 
 export interface ButtonProps {
     /**
@@ -19,10 +20,13 @@ export interface ButtonProps {
     /**
      * Optional click handler
      */
+    color?: 'primary';
     onClick?: () => void;
     children: JSX.Element | string;
     isDisabled?: boolean;
     tabIndex?: number;
+    addClasses?: string;
+    ripple?: RippleProps['ripple'];
 }
 
 /**
@@ -31,22 +35,34 @@ export interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({
     primary = false,
     size = 'medium',
+
+    color,
+    ripple,
     backgroundColor,
+    addClasses = '',
     children,
-    isDisabled,
+    isDisabled = false,
     tabIndex = 0
 }: ButtonProps) => {
-    const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+    const rootRef = React.useRef<any>(null);
+    const rippleRef = React.useRef<any>(null);
+
+    const handleClick = (e: any) => {
+        rippleRef.current.start(e);
+    };
 
     return (
         <button
+            ref={rootRef}
             type="button"
-            className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+            className={`${classes.root} ${addClasses}`}
             style={{ backgroundColor }}
             tabIndex={isDisabled ? -1 : tabIndex}
+            disabled={isDisabled}
+            onClick={handleClick}
         >
             {children}
-            <Ripple />
+            <Ripple ref={rippleRef} ripple={ripple} />
         </button>
     );
 };

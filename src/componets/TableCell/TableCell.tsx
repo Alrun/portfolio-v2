@@ -21,7 +21,7 @@ import classes from './TableCell.module.scss';
 export default function TableCell({ col: { head, width, order, align = 'start' }, addClasses, children }: any) {
     return (
         <div
-            data-col-id={head[0].id}
+            data-id={head[0].id}
             style={{
                 minWidth: width,
                 width,

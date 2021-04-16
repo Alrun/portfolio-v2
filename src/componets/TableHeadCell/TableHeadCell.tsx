@@ -7,10 +7,12 @@ import { TableHeadCellProps } from './TableHeadCell.d';
 import Ripple from '../../ui/Ripple/Ripple';
 import Tooltip, { MouseoverTooltip } from '../../ui/Tooltip/Tooltip';
 
-const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
+const TableHeadCell = React.forwardRef<HTMLDivElement, any>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
-    function TableHeadCellRef({ item, isReorderable, isResizable, align = 'start' }: TableHeadCellProps, ref) {
+    function TableHeadCellRef({ item, align = 'start' }: any, ref) {
         const rippleRef = React.useRef<any>(null);
+
+        const rootRef = React.useRef<HTMLDivElement>(null);
 
         const handleClick = (e: any) => {
             console.log('click ', e.currentTarget.dataset.buttonId);
@@ -27,32 +29,12 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
 
         return (
             <div
-                ref={ref}
-                data-col-id={item.head[0].id}
+                ref={rootRef}
+                // data-col-id={item.head[0].id}
                 // data-reorderable="container"
                 className={`${classes.root}`}
-                key={item.head[0].id}
-                style={{
-                    minWidth: item.width,
-                    width: item.width,
-                    maxWidth: item.width,
-                    order: item.order
-                }}
+                // key={item.head[0].id}
             >
-                {isReorderable && (
-                    <div data-reorderable="true" className={classes.reorder} aria-hidden="true">
-                        <span className={classes.iconWrapper}>
-                            <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="10.1538" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="13.1905" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="10.1538" y="7.09521" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                                <rect x="4" y="1" width="3.84616" height="3.80953" fill="#AAAAAA" />
-                            </svg>
-                        </span>
-                    </div>
-                )}
-
                 <div className={`${classes.container} ${classes[align]}`}>
                     <div className={classes.actions}>
                         <button
@@ -102,17 +84,7 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
                         )}
                     </div>
                 </div>
-                <div className={classes.resizer}>
-                    {isResizable && (
-                        <div
-                            data-resizable={!!isResizable}
-                            // data-resizable='toggle'
-                            className={classes.resizeTrigger}
-                            aria-hidden="true"
-                        />
-                    )}
-                    <div className={classes.separator} />
-                </div>
+
                 {/* <div className={classes.separator}> */}
                 {/*    {isResizable && ( */}
                 {/*        <div */}
@@ -129,3 +101,15 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, TableHeadCellProps>(
 );
 
 export default TableHeadCell;
+
+// <div
+//     data-id={child.props.id}
+//     ref={addDraggableItems}
+//     className={classes.dragItem}
+//     style={{
+//         minWidth: child.props.children.props.item.width,
+//         width: child.props.children.props.item.width,
+//         maxWidth: child.props.children.props.item.width,
+//         order: child.props.children.props.item.order
+//     }}
+// >

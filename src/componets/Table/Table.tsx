@@ -95,13 +95,13 @@ export default function Table() {
                     bodyRef={bodyRef}
                 />
 
-                <TableBody items={items} columns={columns} loading={loading} error={error} ref={bodyRef} />
+                <TableBody columns={columns} items={items} loading={loading} error={error} ref={bodyRef} />
 
                 <TableFooter columns={columns} ref={scrollRef} />
             </div>
 
             {/* eslint-disable-next-line no-plusplus */}
-            <b>Table RENDER COUNT: {++rendersCount.current}</b>
+            <b style={{ position: 'absolute', top: '130px' }}>Table RENDER COUNT: {++rendersCount.current}</b>
         </div>
     );
 }

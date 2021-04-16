@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
@@ -9,7 +8,7 @@ import useInterval from '../../hooks/useInterval';
 export interface PopoverProps {
     content: React.ReactNode;
     show: boolean;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     placement?: Placement;
 }
 
@@ -46,8 +45,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
             {/* {ReactDOM.createPortal( */}
             <div
                 className={show ? `${classes.container} ${classes.show}` : classes.container}
-                // @ts-ignore
-                show={show}
+                // show={show ? }
                 ref={popperElement}
                 style={styles.popper}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
