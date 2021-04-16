@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import reportWebVitals from './reportWebVitals';
 // import * as serviceWorker from './serviceWorker';
+import 'focus-visible';
 import App from './componets/App/App';
 
 import './assets/styles/index.scss';

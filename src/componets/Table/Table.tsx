@@ -95,7 +95,7 @@ export default function Table() {
                     bodyRef={bodyRef}
                 />
 
-                <TableBody items={items} columns={columns} loading={loading} error={error} ref={bodyRef} />
+                <TableBody columns={columns} items={items} loading={loading} error={error} ref={bodyRef} />
 
                 <TableFooter columns={columns} ref={scrollRef} />
             </div>

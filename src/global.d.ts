@@ -1,4 +1,5 @@
 /// <reference types="react-scripts" />
+// declare module 'focus-visible';
 
 // declare module '@storybook/addon-docs/blocks';
 // declare module '@types/nprogress';

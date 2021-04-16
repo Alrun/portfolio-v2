@@ -92,7 +92,7 @@ export default function TableRow({ item, columns, children, isGroup }: TableRowP
         </div>
     );
 
-    return children ? <div className={classes.root}>{children}</div> : defineGroup;
+    return children ? <div className={classes.root}><div className={classes.checkbox}>X</div>{children}</div> : defineGroup;
 }
 // <div className={classes.root}>
 //     {columns &&

@@ -34,9 +34,9 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                 {columns && (
                     <>
                         <div className={classes.fixed}>
+                            <div className={classes.checkbox}>X</div>
                             <TableReorder
                                 id="reorder-fixed"
-                                width={fixedColsWidth}
                                 bodyRef={bodyRef}
                                 headRef={rootRef}
                                 handleReorder={handleReorder}
@@ -45,13 +45,15 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                     <TableHeadItem
                                         key={item.head[0].id}
                                         id={item.head[0].id}
+                                        item={item}
                                         width={item.width}
                                         order={item.order}
-                                        isDraggable
+                                        reorderable={item.reorderable}
+                                        resizable={item.resizable}
+                                        paddingLeft={fixedColsWidth}
                                         bodyRef={bodyRef}
                                         headRef={rootRef}
                                         handleResize={handleResize}
-                                        item={item}
                                     />
                                 ))}
                             </TableReorder>
@@ -59,7 +61,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                         <div ref={ref} className={classes.container}>
                             <TableReorder
                                 id="reorder"
-                                width={visibleColsWidth}
+                                minWidth={visibleColsWidth}
                                 bodyRef={bodyRef}
                                 headRef={rootRef}
                                 handleReorder={handleReorder}
@@ -68,13 +70,14 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                                     <TableHeadItem
                                         key={item.head[0].id}
                                         id={item.head[0].id}
+                                        item={item}
                                         width={item.width}
                                         order={item.order}
-                                        item={item}
+                                        reorderable={item.reorderable}
+                                        resizable={item.resizable}
                                         bodyRef={bodyRef}
                                         headRef={rootRef}
                                         handleResize={handleResize}
-                                        isDraggable
                                     />
                                 ))}
                             </TableReorder>

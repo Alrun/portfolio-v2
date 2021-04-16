@@ -1,32 +1,22 @@
 import React from 'react';
 
+import { TableReorderProps } from './TableReorder.d';
 import classes from './TableReorder.module.scss';
 import headItemClasses from '../TableHeadItem/TableHeadItem.module.scss';
 import TableHeadItem from '../TableHeadItem/TableHeadItem';
 
-interface TableReorderProps {
-    id: string;
-    width: number;
-    headRef: React.RefObject<HTMLDivElement>;
-    bodyRef: React.RefObject<HTMLDivElement>;
-    handleReorder: (orders: any) => void;
-    children: JSX.Element | JSX.Element[];
-}
-
-const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: TableReorderProps) => {
+const TableReorder = ({ id, minWidth, bodyRef, headRef, handleReorder, children }: TableReorderProps) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const draggableItemsRef = React.useRef<HTMLDivElement[]>([]);
-    const rendersCount = React.useRef(0);
 
     const addDraggableItems = React.useCallback((node) => {
-        if (node) draggableItemsRef.current.push(node);
+        const itemsIdList = draggableItemsRef.current.map((el) => el.dataset.id);
+
+        if (node && !itemsIdList.includes(node.dataset.id)) draggableItemsRef.current.push(node);
     }, []);
 
     React.useEffect(() => {
-        if (!draggableItemsRef.current) return;
-
         const container = rootRef.current?.parentElement;
-        const otherScopesItems = headRef.current?.querySelectorAll(`.${classes.root}:not(#${id}) .${classes.dragItem}`);
         const scopeIdList: string[] = [];
         /**
          * Define IDs of dragged items in the current container
@@ -43,10 +33,11 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
             const draggableNotCurrent = draggableItemsRef.current.filter(
                 (el) => el.dataset.id !== draggableEl.dataset.id
             );
+
             /**
              * Drag move
              */
-            function onMouseMove(e: any) {
+            const onMouseMove = (e: any) => {
                 if (e.type === 'touchmove') {
                     deltaX = e.changedTouches[0].clientX - initialX;
                 } else {
@@ -101,15 +92,13 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
                             }
                         });
                 }
-            }
+            };
 
             /**
              * Drag stop
              */
-            function onMouseUp(e: any) {
+            const onMouseUp = (e: any) => {
                 let dragTarget;
-
-                draggableEl.style.pointerEvents = 'none';
 
                 if (e.type === 'touchend') {
                     dragTarget = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
@@ -124,9 +113,11 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
                 }
 
                 if (dragTarget) {
-                    const currentDragTarget: HTMLDivElement | null = dragTarget.closest(`.${headItemClasses.dragItem}`);
+                    const currentDragTarget: HTMLDivElement | null = dragTarget.closest(`.${headItemClasses.root}`);
 
                     if (currentDragTarget) {
+                        const isDraggable = !!currentDragTarget.querySelector(`.${headItemClasses.dragTrigger}`);
+
                         const dragEl = {
                             id: draggableEl.dataset.id,
                             order: Number(draggableEl.style.order)
@@ -144,44 +135,27 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
                              * Set drag element current order
                              */
                             if (elId === dragEl.id) {
-                                return {
-                                    id: elId,
-                                    order: Number(targetEl.order)
-                                };
+                                return { id: elId, order: Number(targetEl.order) };
                             }
                             /**
                              * Reordering intermediate blocks when dragged to the right
                              */
                             if (dragEl.order > targetEl.order && elOrder < dragEl.order && elOrder >= targetEl.order) {
-                                return {
-                                    id: elId,
-                                    order: elOrder + 1
-                                };
+                                return { id: elId, order: elOrder + 1 };
                             }
                             /**
                              * Reordering intermediate blocks when dragged to the left
                              */
                             if (dragEl.order < targetEl.order && elOrder > dragEl.order && elOrder <= targetEl.order) {
-                                return {
-                                    id: elId,
-                                    order: elOrder - 1
-                                };
+                                return { id: elId, order: elOrder - 1 };
                             }
                             /**
                              * Fallback
                              */
-                            return {
-                                id: elId,
-                                order: elOrder
-                            };
+                            return { id: elId, order: elOrder };
                         });
-                        /**
-                         * Dispatch if the columns belong to the same parent
-                         */
-                        // const dragElContainer = drag.dragEl.closest(`.${classes.fixed}`);
-                        // const targetElContainer = drag.targetEl.closest(`.${classes.fixed}`);
 
-                        handleReorder(defineOrders);
+                        if (isDraggable) handleReorder(defineOrders);
                     }
                 }
                 /**
@@ -223,43 +197,19 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
                     item.style.backgroundColor = 'inherit';
                 });
 
-                draggableEl.classList.remove(classes.dragged);
+                draggableEl.classList.remove('drag-active');
+                rootRef.current?.classList.remove('drag-group');
+                headRef.current?.classList.remove('dragging');
 
-                // const currentColCells = [...cells].filter(
-                //     (item) => drag.dragEl && item.dataset.colId === drag.dragEl.dataset.colId
-                // );
-                // /**
-                //  * Set new styles for head cell in dragged column
-                //  */
-                // currentColCells[0].style.zIndex = 'auto';
-                // currentColCells[0].style.left = `0px`;
-                // currentColCells[0].style.opacity = '1';
-                // /**
-                //  * Set initial background cells in dragged column
-                //  */
-                // currentColCells.forEach((cel: any) => {
-                //     cel.style.backgroundColor = 'initial';
-                // });
-                //
-                // currentColCells[0].classList.remove(headCellClasses.dragged);
-                // }
-
-                // const draggedCol: HTMLDivElement | null = drag.dragEl.closest('[data-col-id]');
-
-                // rootRef.current?.classList.remove(classes.reordering);
                 document.body.style.cursor = 'default';
-                draggableEl.style.pointerEvents = 'auto';
 
-                otherScopesItems?.forEach((item: any) => {
-                    item.classList.remove(classes.dragged);
-                    item.style.cursor = 'auto';
-                });
-            }
+                console.log('stop');
+            };
 
             /**
              * Drag start
              */
-            function onMousedown(e: any) {
+            const onMousedown = (e: any) => {
                 if (e.type === 'touchstart') {
                     initialX = e.changedTouches[0].clientX;
 
@@ -276,8 +226,11 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
 
                 draggableEl.style.zIndex = '1000';
                 draggableEl.style.opacity = '0.5';
-                // draggableEl.style.pointerEvents = 'none';
-                draggableEl.classList.add(classes.dragged);
+
+                draggableEl.classList.add('drag-active');
+                headRef.current?.classList.add('dragging');
+                rootRef.current?.classList.add('drag-group');
+
                 /**
                  * Highlight body reorder column cells
                  */
@@ -324,34 +277,35 @@ const TableReorder = ({ id, width, bodyRef, headRef, handleReorder, children }: 
                     item.appendChild(colOverlay);
                 });
 
-                otherScopesItems?.forEach((item: any) => {
-                    item.classList.add(classes.dragged);
-                    item.style.cursor = 'not-allowed';
-                });
-
                 document.body.style.cursor = 'move';
 
                 console.log('start');
-            }
+            };
+
+            const preventDefault = (e: any) => e.preventDefault();
 
             if (dragTrigger) {
-                dragTrigger.addEventListener('dragstart', (e) => e.preventDefault());
+                dragTrigger.addEventListener('dragstart', preventDefault);
                 dragTrigger.addEventListener('mousedown', onMousedown);
                 dragTrigger.addEventListener('touchstart', onMousedown);
             }
+
+            return () => {
+                if (dragTrigger) {
+                    dragTrigger.removeEventListener('dragstart', preventDefault);
+                    dragTrigger.removeEventListener('mousedown', onMousedown);
+                    dragTrigger.removeEventListener('touchstart', onMousedown);
+                }
+            };
         });
-    }, [bodyRef, handleReorder, headRef, id]);
+    }, [bodyRef, handleReorder, headRef]);
 
     return (
-        <>
-            <div ref={rootRef} id={id} className={classes.root} style={{minWidth: width}}>
-                {React.Children.map(children, (child) => <TableHeadItem ref={addDraggableItems} {...child.props} />)}
-            </div>
-            <b style={{ position: 'absolute', top: '80px' }}>
-                {/* eslint-disable-next-line no-plusplus */}
-                Droppable RENDER COUNT: {++rendersCount.current}
-            </b>
-        </>
+        <div ref={rootRef} id={id} className={classes.root} style={{ minWidth: minWidth || 'auto' }}>
+            {React.Children.map(children, (child) => (
+                <TableHeadItem ref={addDraggableItems} {...child.props} />
+            ))}
+        </div>
     );
 };
 

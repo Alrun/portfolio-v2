@@ -29,7 +29,7 @@ module.exports = {
         "prettier/prettier": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "no-param-reassign": "warn",
-        "react/jsx-props-no-spreading": "warn",
+        "react/jsx-props-no-spreading": "off",
         "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }],
         "react/require-default-props": ["off", { "forbidDefaultForRequired": false, "ignoreFunctionalComponents": true }]
     }

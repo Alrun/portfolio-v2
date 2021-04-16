@@ -1,0 +1,26 @@
+.root {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    color: green;
+    position: relative;
+}
+
+.input {
+    top: 0;
+    left: 0;
+    width: 100%;
+    cursor: inherit;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    z-index: 1;
+    position: absolute;
+
+    &:global(.focus-visible) ~ .focus {
+        background: rgba(0,0,0,.15);
+    }
+}

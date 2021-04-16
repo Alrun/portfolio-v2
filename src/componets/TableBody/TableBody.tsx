@@ -29,7 +29,7 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
 
         return (
             <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
-                {!!fixedColumns.length && <TableFixedColumn columns={columns} items={items} />}
+                <TableFixedColumn columns={columns} items={items} />
 
                 <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
                     {!!items.length &&

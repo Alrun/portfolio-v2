@@ -7,18 +7,31 @@ import TableHeadCell from '../TableHeadCell/TableHeadCell';
 interface TableReorderItemProps {
     id: string;
     item: any;
-    isDraggable: boolean;
+    reorderable: boolean;
+    resizable: boolean;
+    paddingLeft?: number;
     width: number;
     order: number;
     headRef: React.RefObject<HTMLDivElement>;
     bodyRef: React.RefObject<HTMLDivElement>;
-    handleResize: any; // () => void;
+    handleResize: (id: string, width: number) => void;
 }
 
 const TableHeadItem = React.forwardRef<HTMLDivElement, TableReorderItemProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
     function TableHeadItemRef(
-        { id, headRef, bodyRef, isDraggable, item, width, order, handleResize }: TableReorderItemProps,
+        {
+            id,
+            headRef,
+            bodyRef,
+            reorderable,
+            resizable,
+            paddingLeft,
+            item,
+            width,
+            order,
+            handleResize
+        }: TableReorderItemProps,
         ref
     ) {
         const rootRef = React.useRef<HTMLDivElement>(null);
@@ -29,7 +42,7 @@ const TableHeadItem = React.forwardRef<HTMLDivElement, TableReorderItemProps>(
             <div
                 ref={rootRef}
                 data-id={id}
-                className={classes.dragItem}
+                className={classes.root}
                 style={{
                     minWidth: width,
                     width,
@@ -37,7 +50,7 @@ const TableHeadItem = React.forwardRef<HTMLDivElement, TableReorderItemProps>(
                     order
                 }}
             >
-                {isDraggable && (
+                {reorderable && (
                     <div className={classes.dragTrigger} aria-hidden="true">
                         <span className={classes.iconWrapper}>
                             <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,23 +63,21 @@ const TableHeadItem = React.forwardRef<HTMLDivElement, TableReorderItemProps>(
                         </span>
                     </div>
                 )}
-                <TableHeadCell
-                    // key={item.head[0].id}
-                    id={id}
-                    // isDraggable={item.reorderable && fixedColumns.length > 1}
-                    item={item}
-                    width={item.width}
-                    align={item.align}
-                    isResizable={item.resizable}
-                    handleResize={handleResize}
-                />
-                <TableResize
-                    id={id}
-                    containerRef={rootRef}
-                    bodyRef={bodyRef}
-                    width={item.width}
-                    handleResize={handleResize}
-                />
+
+                <TableHeadCell item={item} align={item.align} />
+                <div className={classes.separator}>
+                    {resizable && (
+                        <TableResize
+                            id={id}
+                            containerRef={rootRef}
+                            headRef={headRef}
+                            bodyRef={bodyRef}
+                            width={item.width}
+                            handleResize={handleResize}
+                            paddingLeft={paddingLeft}
+                        />
+                    )}
+                </div>
             </div>
         );
     }
