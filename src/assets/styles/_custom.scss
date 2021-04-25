@@ -8,8 +8,8 @@ html,
 body {
     height: 100%;
     font-family: 'Proxima Nova', $font-family-sans-serif;
-    background-color: $gray-lighter;
-    color: $gray-darkest;
+    background-color: $gray-100;
+    color: $gray-700;
     min-width: 320px;
     overflow-x: hidden;
     //position: relative;
@@ -40,6 +40,10 @@ svg {
 //.main {
 //    flex-grow: 1
 //}
+
+a, label{
+    -webkit-tap-highlight-color: transparent;
+}
 
 
 .custom-container {
@@ -98,19 +102,13 @@ h4, .h4 {
     font-size: 0.75rem;
 }
 
-.text_gray-dark {
-    color: $gray-dark;
-}
-
-.text_green {
-    color: $green;
-}
-
-.text_blue-light {
-    color: $blue-light;
-}
-
 .bg_image {
     background-size: cover;
     background-position: 50%;
+}
+
+.btn-example {
+    > * {
+        margin: 10px;
+    }
 }

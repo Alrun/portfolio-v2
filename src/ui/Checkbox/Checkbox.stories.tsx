@@ -2,7 +2,8 @@ import React from 'react';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { Checkbox, CheckboxProps } from './Checkbox';
+import Checkbox from './Checkbox';
+import { CheckboxProps } from './Checkbox.d';
 
 export default {
     title: 'Example/Checkbox',
@@ -27,14 +28,14 @@ export const Secondary = Template.bind({});
 
 export const Large = Template.bind({});
 
-Large.args = {
-    size: 'large',
-    // label: 'Button'
-};
-
-export const Small = Template.bind({});
-
-Small.args = {
-    size: 'small',
-    // label: 'Button'
-};
+// Large.args = {
+//     size: 'large',
+//     // label: 'Button'
+// };
+//
+// export const Small = Template.bind({});
+//
+// Small.args = {
+//     size: 'small',
+//     // label: 'Button'
+// };

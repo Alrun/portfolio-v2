@@ -1,68 +1,138 @@
 import React from 'react';
+import clsx from 'clsx';
 
 import classes from './Button.module.scss';
+import { ButtonProps } from './Button.d';
 import Ripple from '../Ripple/Ripple';
-import { RippleProps } from '../Ripple/Ripple.d';
 
-export interface ButtonProps {
-    /**
-     * Is this the principal call to action on the page?
-     */
-    primary?: boolean;
-    /**
-     * What background color to use
-     */
-    backgroundColor?: string;
-    /**
-     * How large should the button be?
-     */
-    size?: 'small' | 'medium' | 'large';
-    /**
-     * Optional click handler
-     */
-    color?: 'primary';
-    onClick?: () => void;
-    children: JSX.Element | string;
-    isDisabled?: boolean;
-    tabIndex?: number;
-    addClasses?: string;
-    ripple?: RippleProps['ripple'];
-}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function ButtonRef(
+        {
+            variant = 'default',
+            color = 'primary',
+            size = 'medium',
+            iconStart,
+            iconEnd,
+            ripple = 'default',
+            href,
+            onClick,
+            children,
+            isDisabled = false,
+            tabIndex = 0
+        }: ButtonProps,
+        ref
+    ) {
+        const rootRef = React.useRef<any>(null);
+        const rippleRef = React.useRef<any>(null);
 
-/**
- * Primary UI component for user interaction
- */
-export const Button: React.FC<ButtonProps> = ({
-    primary = false,
-    size = 'medium',
+        React.useImperativeHandle(ref, () => rootRef.current as HTMLButtonElement);
 
-    color,
-    ripple,
-    backgroundColor,
-    addClasses = '',
-    children,
-    isDisabled = false,
-    tabIndex = 0
-}: ButtonProps) => {
-    const rootRef = React.useRef<any>(null);
-    const rippleRef = React.useRef<any>(null);
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+            /**
+             * Disable anchor behaviour
+             */
+            e.preventDefault();
 
-    const handleClick = (e: any) => {
-        rippleRef.current.start(e);
-    };
+            if (ripple) rippleRef.current.start(e);
+            if (onClick) onClick(e);
+        };
 
-    return (
-        <button
-            ref={rootRef}
-            type="button"
-            className={`${classes.root} ${addClasses}`}
-            style={{ backgroundColor }}
-            tabIndex={isDisabled ? -1 : tabIndex}
-            disabled={isDisabled}
-            onClick={handleClick}
-        >
-            {children}
-            <Ripple ref={rippleRef} ripple={ripple} />
-        </button>
-    );
-};
+        /**
+         * Disable drag effect for anchor element
+         */
+        React.useEffect(() => {
+            const el = rootRef.current;
+            const preventDefault = (e: any) => e.preventDefault();
+
+            if (href && el) el.addEventListener('dragstart', preventDefault);
+
+            return () => {
+                if (href && el) el.removeEventListener('dragstart', preventDefault);
+            };
+        }, [href]);
+
+        return (
+            <>
+                {href ? (
+                    <a
+                        href={href}
+                        ref={rootRef}
+                        className={clsx(
+                            classes.root,
+                            classes[variant],
+                            classes[size],
+                            classes[color],
+                            !React.Children.count(children) && classes.rounded,
+                            isDisabled && classes.disabled
+                        )}
+                        tabIndex={isDisabled ? -1 : tabIndex}
+                        onClick={handleClick}
+                    >
+                        <span className={classes.label}>
+                            {iconStart && (
+                                <span
+                                    className={clsx(classes.icon, React.Children.count(children) && classes.iconStart)}
+                                >
+                                    {iconStart}
+                                </span>
+                            )}
+                            {children}
+                            {iconEnd && (
+                                <span className={clsx(classes.icon, React.Children.count(children) && classes.iconEnd)}>
+                                    {iconEnd}
+                                </span>
+                            )}
+                        </span>
+
+                        <Ripple
+                            ref={rippleRef}
+                            ripple={!React.Children.count(children) ? 'center' : ripple}
+                            addClasses={classes.background}
+                        />
+                    </a>
+                ) : (
+                    <button
+                        ref={rootRef}
+                        type="button"
+                        className={clsx(
+                            classes.root,
+                            classes[variant],
+                            classes[size],
+                            classes[color],
+                            !React.Children.count(children) && classes.rounded,
+                            isDisabled && classes.disabled
+                        )}
+                        disabled={isDisabled}
+                        tabIndex={isDisabled ? -1 : tabIndex}
+                        onClick={handleClick}
+                    >
+                        <span className={classes.label}>
+                            {iconStart && (
+                                <span
+                                    className={clsx(classes.icon, React.Children.count(children) && classes.iconStart)}
+                                >
+                                    {iconStart}
+                                </span>
+                            )}
+                            {children}
+                            {iconEnd && (
+                                <span className={clsx(classes.icon, React.Children.count(children) && classes.iconEnd)}>
+                                    {iconEnd}
+                                </span>
+                            )}
+                        </span>
+
+                        <Ripple
+                            ref={rippleRef}
+                            ripple={!React.Children.count(children) ? 'center' : ripple}
+                            addClasses={classes.background}
+                        />
+                    </button>
+                )}
+            </>
+        );
+    }
+);
+
+export default Button;

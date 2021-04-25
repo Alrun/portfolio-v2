@@ -1,28 +1,58 @@
 import React from 'react';
-import Popover, { PopoverProps } from '../Popover/Popover';
-import classes from './Tooltip.module.scss';
+import Tippy from '@tippyjs/react/headless';
+// eslint-disable-next-line import/no-extraneous-dependencies
+// import 'tippy.js/dist/tippy.css';
 
-interface TooltipProps extends Omit<PopoverProps, 'content'> {
-    // text: string;
-    children: JSX.Element | string;
+export default function Dropdown() {
+    const [visible, setVisible] = React.useState(false);
+    const show = () => setVisible(true);
+    const hide = () => setVisible(false);
+
+    const clickOutside = (instanse: any, e: any) => {
+        if (instanse.popper !== e.target.closest('[data-tippy-root]')) hide();
+    };
+
+    return (
+        <Tippy
+            visible={visible}
+            placement="bottom"
+            onClickOutside={clickOutside}
+            popperOptions={{
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 0]
+                        }
+                    }
+                    // {
+                    //     name: 'arrow',
+                    //     options: {
+                    //         element: arrow, // can be a CSS selector too
+                    //     },
+                    // },
+                ]
+            }}
+            render={(attrs) => (
+                <div className="box" style={{ background: '#eee', pointerEvents: 'auto' }} {...attrs}>
+                    <div>My tippy box</div>
+                    <div>My tippy box</div>
+                    <div>My tippy box</div>
+                    <div>My tippy box</div>
+                    <div data-popper-arrow="" />
+                </div>
+            )}
+        >
+            <button type="button" onClick={visible ? hide : show}>
+                My button
+            </button>
+        </Tippy>
+    );
+
+    //
+    // return (
+    //     <Tippy content="Tooltip" visible={visible} onClickOutside={hide}>
+    //         <button type="button" onClick={visible ? hide : show}>Reference</button>
+    //     </Tippy>
+    // );
 }
-
-export default function Dropdown({children }: TooltipProps) {
-    return <div>children</div>
-    // return <Popover content={<div className={classes.container}></div>}  children={children}/>;
-}
-
-// export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
-//     const [show, setShow] = React.useState(false);
-//
-//     const open = React.useCallback(() => setShow(true), [setShow]);
-//
-//     return (
-//         <Dropdown {...rest} show={show}>
-//             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
-//             <div onClick={open} className="tooltip-wrapper">
-//                 {children}
-//             </div>
-//         </Dropdown>
-//     );
-// }

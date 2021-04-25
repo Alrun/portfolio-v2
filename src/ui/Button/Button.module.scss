@@ -1,31 +1,367 @@
+@import '../../assets/styles/variables';
+
 .root {
     position: relative;
-    color: inherit;
-    border: 0;
     cursor: pointer;
+    z-index: 1;
     margin: 0;
     display: inline-flex;
     outline: 0;
-    padding: 0;
     align-items: center;
     user-select: none;
-    border-radius: 0;
     vertical-align: middle;
     justify-content: center;
     text-decoration: none;
-    background-color: transparent;
-    //min-width: 64px;
+    overflow: hidden;
+    white-space: nowrap;
     box-sizing: border-box;
-    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    //font-size: 0.875rem;
-    //font-weight: 500;
-    //line-height: 1.75;
-    //letter-spacing: 0.02857em;
+    transition: background-color .18s cubic-bezier(0.4, 0, 0.2, 1) 0s, border .18s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow .18s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    font-weight: 500;
+    text-transform: uppercase;
+    line-height: 1.5;
+    letter-spacing: 0.02857em;
     -moz-appearance: none;
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
+}
 
-    &:global(.focus-visible) {
-        background: red;
+.label {
+    display: flex;
+    align-items: center;
+}
+
+.small {
+    padding: .25rem 1rem;
+    font-size: 0.875rem;
+    border-radius: .2rem;
+
+    .iconStart{
+        margin-left: -.25rem;
+        margin-right: .5rem;
+    }
+
+    .iconEnd{
+        margin-right: -.25rem;
+        margin-left: .5rem;
     }
 }
+
+.medium {
+    padding: .5rem 1.5rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+
+    .iconStart{
+        margin-left: -.5rem;
+        margin-right: .5rem;
+    }
+
+    .iconEnd{
+        margin-right: -.5rem;
+        margin-left: .5rem;
+    }
+}
+
+.large {
+    padding: .625rem 2rem;
+    font-size: 1.2rem;
+    border-radius: .3rem;
+
+    .iconStart{
+        margin-left: -.625rem;
+        margin-right: .5rem;
+    }
+
+    .iconEnd{
+        margin-right: -.625rem;
+        margin-left: .5rem;
+    }
+}
+
+.rounded {
+    border-radius: 50%;
+
+    &.small {
+        padding: .25rem;
+    }
+
+    &.medium {
+        padding: .5rem;
+    }
+
+    &.large {
+        padding: .625rem;
+    }
+}
+
+.primary {
+    color: $primary;
+    background-color: $primary;
+    border-color: $primary;
+
+    &:hover {
+        color: $primary;
+        border-color: darken($primary, 5%);
+        background-color: rgba($primary, .1);
+    }
+
+    &:active {
+        color: $primary;
+        border-color: darken($primary, 10%);
+        background-color: rgba($primary, .15);
+    }
+
+    &:global(.focus-visible) {
+        box-shadow: inset 0 0 .5em rgba($primary, .5), 0 0 .5em rgba($primary, .2);
+    }
+}
+
+.secondary {
+    color: $gray-700;
+    background-color: $secondary;
+    border-color: $secondary;
+
+    &:hover {
+        color: $gray-700;
+        background-color: rgba($secondary, .75);
+        border-color: darken($secondary, 5%);
+    }
+
+    &:active {
+        color: $gray-700;
+        background-color: rgba($secondary, 1);
+        border-color: darken($secondary, 10%);
+    }
+
+    &:global(.focus-visible) {
+        box-shadow: inset 0 0 .5em rgba($secondary, .9), 0 0 .5em rgba($secondary, .6);
+    }
+}
+
+.success {
+    color: $success;
+    border-color: $success;
+    background-color: $success;
+
+    &:hover {
+        color: $success;
+        background-color: rgba($success, .1);
+        border-color: darken($success, 5%);
+    }
+
+    &:active {
+        color: $success;
+        background-color: rgba($success, .15);
+        border-color: darken($success, 10%);
+    }
+
+    &:global(.focus-visible) {
+        box-shadow: inset 0 0 .5em rgba($success, .5), 0 0 .5em rgba($success, .2);
+    }
+}
+
+.danger {
+    color: $danger;
+    border-color: $danger;
+    background-color: $danger;
+
+    &:hover {
+        color: $danger;
+        background-color: rgba($danger, .1);
+        border-color: darken($danger, 5%);
+    }
+
+    &:active {
+        color: $danger;
+        background-color: rgba($danger, .15);
+        border-color: darken($danger, 10%);
+    }
+
+    &:global(.focus-visible) {
+        box-shadow: inset 0 0 .5em rgba($danger, .5), 0 0 .5em rgba($danger, .2);
+    }
+}
+
+.disabled,
+.disabled:hover,
+.disabled:active {
+    pointer-events: none;
+    cursor: default;
+    color: $gray-400;
+    border-color: $gray-200;
+    background-color: transparent;
+}
+
+.default {
+    background-color: transparent;
+    border: 0;
+
+    &.primary {
+    }
+
+    &.secondary {
+    }
+
+    &.success {
+    }
+
+    &.danger {
+    }
+}
+
+.filled {
+    border: 0;
+
+    &.primary {
+        color: $white;
+
+        &:hover {
+            background-color: darken($primary, 5%);
+        }
+
+        &:active {
+            background-color: darken($primary, 10%);
+        }
+    }
+
+    &.secondary {
+
+        &:hover {
+            background-color: darken($secondary, 5%);
+        }
+
+        &:active {
+            background-color: darken($secondary, 10%);
+        }
+    }
+
+    &.success {
+        color: $white;
+
+        &:hover {
+            background-color: darken($success, 5%);
+        }
+
+        &:active {
+            background-color: darken($success, 10%);
+        }
+    }
+
+    &.danger {
+        color: $white;
+
+        &:hover {
+            background-color: darken($danger, 5%);
+        }
+
+        &:active {
+            background-color: darken($danger, 10%);
+        }
+    }
+
+    &:global(.focus-visible) {
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0px 4px 5px 0px rgba(0, 0, 0, .15), 0px 1px 10px 0px rgba(0, 0, 0, .1);
+    }
+
+    &.disabled,
+    &.disabled:hover,
+    &.disabled:active {
+        color: $gray-400;
+        background-color: $gray-200;
+    }
+}
+
+.outline {
+    border: 1px solid;
+    background-color: transparent;
+
+    &.primary {
+
+        &:hover {
+            background-color: rgba($primary, .1);
+            border-color: darken($primary, 10%);
+        }
+
+        &:active {
+            background-color: rgba($primary, .15);
+            border-color: darken($primary, 15%);
+        }
+
+        &:global(.focus-visible) {
+            box-shadow: inset 0 0 1em rgba($primary, .5), 0 0 1em rgba($primary, .2);
+        }
+    }
+
+    &.secondary {
+        border-color: darken($secondary, 10%);;
+
+        &:hover {
+            background-color: rgba($secondary, .5);
+            border-color: darken($secondary, 15%);
+        }
+
+        &:active {
+            background-color: rgba($secondary, .75);
+            border-color: darken($secondary, 20%);
+        }
+
+        &:global(.focus-visible) {
+            box-shadow: inset 0 0 1em rgba($secondary, .9), 0 0 1em rgba($secondary, .6);
+        }
+    }
+
+    &.success {
+
+        &:hover {
+            background-color: rgba($success, .1);
+            border-color: darken($success, 10%);
+        }
+
+        &:active {
+            background-color: rgba($success, .15);
+            border-color: darken($success, 15%);
+        }
+
+        &:global(.focus-visible) {
+            box-shadow: inset 0 0 1em rgba($success, .5), 0 0 1em rgba($success, .2);
+        }
+    }
+
+    &.danger {
+
+        &:hover {
+            background-color: rgba($danger, .1);
+            border-color: darken($danger, 10%);
+        }
+
+        &:active {
+            background-color: rgba($danger, .15);
+            border-color: darken($danger, 15%);
+        }
+
+        &:global(.focus-visible) {
+            box-shadow: inset 0 0 1em rgba($danger, .5), 0 0 1em rgba($danger, .2);
+        }
+    }
+
+    &.disabled,
+    &.disabled:hover,
+    &.disabled:active {
+        color: $gray-400;
+        border-color: $gray-200;
+        background-color: transparent;
+    }
+}
+
+.icon {
+
+    > * {
+        display: block;
+        font-size: 1.4em;
+        fill: currentColor;
+        height: 1em;
+        width: 1em;
+    }
+}
+
+
