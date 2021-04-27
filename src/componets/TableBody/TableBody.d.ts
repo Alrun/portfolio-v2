@@ -3,6 +3,8 @@ import { TableColumnInterface, TableItemInterface } from '../../redux/slices/tab
 export interface TableBodyProps {
     columns: TableColumnInterface[];
     items: TableItemInterface[];
-    loading: boolean;
-    error: string;
+    loading?: boolean;
+    error?: string;
+    groupOpen?: string[];
+    handleGroupOpen?: (id: string) => void;
 }

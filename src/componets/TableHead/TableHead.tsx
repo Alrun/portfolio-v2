@@ -4,6 +4,7 @@ import classes from './TableHead.module.scss';
 import { TableHeadProps } from './TableHead.d';
 import TableReorder from '../TableReorder/TableReorder';
 import TableHeadItem from '../TableHeadItem/TableHeadItem';
+import Checkbox from '../../ui/Checkbox/Checkbox';
 
 const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
@@ -34,7 +35,7 @@ const TableHead = React.forwardRef<HTMLDivElement, TableHeadProps>(
                 {columns && (
                     <>
                         <div className={classes.fixed}>
-                            <div className={classes.checkbox}>X</div>
+                            <Checkbox />
                             <TableReorder
                                 id="reorder-fixed"
                                 bodyRef={bodyRef}

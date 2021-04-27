@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { reorder, resize, setData, tableSelector } from '../../redux/slices/table/table';
+import { reorder, resize, setData, setGroupOpen, tableSelector } from '../../redux/slices/table/table';
 import classes from './Table.module.scss';
 import TableHead from '../TableHead/TableHead';
 import TableBody from '../TableBody/TableBody';
@@ -9,7 +9,7 @@ import TableFooter from '../TableFooter/TableFooter';
 import { tableDataSuccess } from '../../__mock__/tableDataMock';
 
 export default function Table() {
-    const { columns, items, loading, error } = useSelector(tableSelector);
+    const { columns, items, groupOpen, loading, error } = useSelector(tableSelector);
     const dispatch = useDispatch();
 
     const rendersCount = React.useRef<number>(0);
@@ -56,6 +56,10 @@ export default function Table() {
             head.scrollLeft = e.target.scrollLeft;
         }
     };
+
+    const handleGroupOpen = (id: string) => {
+        dispatch(setGroupOpen(id));
+    };
     /**
      * Add body scroll listener
      */
@@ -95,7 +99,15 @@ export default function Table() {
                     bodyRef={bodyRef}
                 />
 
-                <TableBody columns={columns} items={items} loading={loading} error={error} ref={bodyRef} />
+                <TableBody
+                    columns={columns}
+                    items={items}
+                    groupOpen={groupOpen}
+                    loading={loading}
+                    error={error}
+                    handleGroupOpen={handleGroupOpen}
+                    ref={bodyRef}
+                />
 
                 <TableFooter columns={columns} ref={scrollRef} />
             </div>

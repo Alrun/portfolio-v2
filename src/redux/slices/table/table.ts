@@ -34,7 +34,7 @@ const initialState: TableState = {
             align: 'end',
             resizable: false,
             reorderable: true,
-            fixed: true,
+            fixed: true
             // hidden: true
         },
         {
@@ -105,24 +105,26 @@ export const table = createSlice({
     initialState,
     reducers: {
         reorder: (state, { payload }: PayloadAction<any>) => {
-                console.log('payload ', payload);
             state.columns.forEach((item) => {
                 const currentCol = payload.filter((el: { id: string }) => el.id === item.head[0].id);
 
-
                 if (currentCol.length) {
-                    // eslint-disable-next-line no-param-reassign
                     item.order = currentCol[0].order;
                 }
             });
         },
         resize: (state, { payload }: PayloadAction<any>) => {
-            // eslint-disable-next-line no-param-reassign
             state.columns.filter((col) => col.head[0].id === payload.id)[0].width = payload.width;
         },
         setData: (state, { payload }: PayloadAction<any>) => {
-            // eslint-disable-next-line no-param-reassign
             state.items = payload.items;
+        },
+        setGroupOpen: (state, { payload }: PayloadAction<any>) => {
+            if (!state.groupOpen.includes(payload)) {
+                state.groupOpen.push(payload);
+            } else {
+                state.groupOpen = state.groupOpen.filter((item) => item !== payload);
+            }
         }
         // ,// increment: (state) => {
         //     // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -133,11 +135,9 @@ export const table = createSlice({
         //     state.value += 1;
         // },
         // decrement: (state) => {
-        //     // eslint-disable-next-line no-param-reassign
         //     state.value -= 1;
         // },
         // incrementByAmount: (state, { payload }: PayloadAction<number>) => {
-        //     // eslint-disable-next-line no-param-reassign
         //     state.value += payload;
         // },
         // // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -148,7 +148,7 @@ export const table = createSlice({
     }
 });
 
-export const { reorder, resize, setData } = table.actions;
+export const { reorder, resize, setData, setGroupOpen } = table.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

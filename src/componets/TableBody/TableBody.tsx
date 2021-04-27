@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSpring, animated, config } from 'react-spring';
 
 import classes from './TableBody.module.scss';
 import { TableBodyProps } from './TableBody.d';
@@ -8,8 +9,13 @@ import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
 
 const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
-    function TableBodyRef({ columns, items /* , loading, error */ }: TableBodyProps, ref) {
+    function TableBodyRef(
+        { columns, items, groupOpen = [], handleGroupOpen /* , loading, error */ }: TableBodyProps,
+        ref
+    ) {
         const rendersCount = React.useRef<number>(0);
+
+        const props = useSpring({ config: { ...config.stiff }, from: { opacity: 0 }, to: { opacity: 1 } });
 
         const fixedColumns = columns.filter((col) => col.fixed && !col.hidden);
 
@@ -29,26 +35,41 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
 
         return (
             <div ref={ref} className={classes.root} style={{ paddingLeft: `${padding}px` }}>
-                <TableFixedColumn columns={columns} items={items} />
+                <TableFixedColumn
+                    columns={columns}
+                    items={items}
+                    groupOpen={groupOpen}
+                    handleGroupOpen={handleGroupOpen}
+                />
 
                 <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
                     {!!items.length &&
                         items.map((item) =>
                             item.group?.length ? (
-                                <div data-group="tt" key={item.id}>
+                                <div data-group={item.id} key={item.id}>
                                     <TableRow item={item} columns={columns} />
-                                    <div className={classes.group}>
-                                        {item.group.map((groupItem) => (
-                                            <TableRow key={groupItem.id} item={groupItem} columns={columns} isGroup />
-                                        ))}
-                                    </div>
+
+                                    {groupOpen.includes(item.id) && (
+                                        <animated.div style={props} className={classes.group}>
+                                            {item.group.map((groupItem) => (
+                                                <TableRow
+                                                    key={groupItem.id}
+                                                    item={groupItem}
+                                                    columns={columns}
+                                                    isGroup
+                                                />
+                                            ))}
+                                        </animated.div>
+                                    )}
                                 </div>
                             ) : (
                                 <TableRow key={item.id} item={item} columns={columns} />
                             )
                         )}
-                    {/* eslint-disable-next-line no-plusplus */}
-                    <b style={{ position: 'absolute', top: '130px' }}>Table Body RENDER COUNT: {++rendersCount.current}</b>
+                    <b style={{ position: 'absolute', top: '130px' }}>
+                        {/* eslint-disable-next-line no-plusplus */}
+                        Table Body RENDER COUNT: {++rendersCount.current}
+                    </b>
                 </div>
             </div>
         );

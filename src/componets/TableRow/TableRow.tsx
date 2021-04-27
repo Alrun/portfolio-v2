@@ -5,11 +5,39 @@ import { TableRowProps } from './TableRow.d';
 
 import TableCell from '../TableCell/TableCell';
 import { TableColumnInterface, TableItemInterface } from '../../redux/slices/table/table.d';
+import Checkbox from '../../ui/Checkbox/Checkbox';
+import Button from '../../ui/Button/Button';
 
-export const tableCells = (columns: TableColumnInterface[], item: TableItemInterface) => [
+export const tableCells = (columns: TableColumnInterface[], item: TableItemInterface, handleGroupOpen?: any) => [
     <TableCell key="1" col={columns[0]}>
-        <div>{item.symbol}</div>
-        <div>{item.title}</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+                <div>{item.symbol}</div>
+                <div>{item.title}</div>
+            </div>
+
+            {item.group?.length ? (
+                <Button
+                    color="secondary"
+                    iconStart={
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        </svg>
+                    }
+                    onClick={() => handleGroupOpen(item.id)}
+                />
+            ) : (
+                <Button
+                    color="secondary"
+                    iconStart={
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        </svg>
+                    }
+                    onClick={() => console.log('Dropdown')}
+                />
+            )}
+        </div>
     </TableCell>,
 
     <TableCell key="2" col={columns[1]}>
@@ -46,7 +74,18 @@ export const tableCells = (columns: TableColumnInterface[], item: TableItemInter
 
 export const tableCellsGroup = (columns: TableColumnInterface[], item: TableItemInterface) => [
     <TableCell key="1" col={columns[0]}>
-        <div>{item.symbol}</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>{item.symbol}</div>
+            <Button
+                color="success"
+                iconStart={
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                    </svg>
+                }
+                onClick={() => console.log('Dropdown')}
+            />
+        </div>
     </TableCell>,
 
     <TableCell key="2" col={columns[1]}>
@@ -92,7 +131,14 @@ export default function TableRow({ item, columns, children, isGroup }: TableRowP
         </div>
     );
 
-    return children ? <div className={classes.root}><div className={classes.checkbox}>X</div>{children}</div> : defineGroup;
+    return children ? (
+        <div className={classes.root}>
+            <Checkbox />
+            {children}
+        </div>
+    ) : (
+        defineGroup
+    );
 }
 // <div className={classes.root}>
 //     {columns &&
