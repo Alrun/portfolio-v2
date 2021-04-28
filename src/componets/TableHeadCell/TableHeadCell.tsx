@@ -1,11 +1,11 @@
 import React from 'react';
-import { usePopper } from 'react-popper';
 
 import classes from './TableHeadCell.module.scss';
-import { TableHeadCellProps } from './TableHeadCell.d';
+// import { TableHeadCellProps } from './TableHeadCell.d';
 
 import Ripple from '../../ui/Ripple/Ripple';
-import Tooltip, { MouseoverTooltip } from '../../ui/Tooltip/Tooltip';
+import Tooltip from '../../ui/Tooltip/Tooltip';
+// import Tooltip, { MouseoverTooltip } from '../../ui/Tooltip/Tooltip';
 
 const TableHeadCell = React.forwardRef<HTMLDivElement, any>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
@@ -70,11 +70,11 @@ const TableHeadCell = React.forwardRef<HTMLDivElement, any>(
                                         className={classes.button}
                                         type="button"
                                     >
-                                        <MouseoverTooltip text={el.title} placement="bottom">
+                                        <Tooltip content={el.title}>
                                             <span className={classes.text}>
                                                 {el.title} o={item.order}
                                             </span>
-                                        </MouseoverTooltip>
+                                        </Tooltip>
 
                                         {(el.id === 'current_value' || el.id === 'quota') && (
                                             <b style={{ fontSize: 26, lineHeight: 1 }}>↓</b>

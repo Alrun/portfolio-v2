@@ -1,67 +1,22 @@
 import React from 'react';
-import { Placement } from '@popperjs/core';
-import { usePopper } from 'react-popper';
+import Tippy from '@tippyjs/react';
+// import { TooltipProps, TooltipChildProps } from './Tooltip.d';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'tippy.js/dist/tippy.css';
 
-import classes from './Popover.module.scss';
-import useInterval from '../../hooks/useInterval';
+const Child = React.forwardRef<HTMLElement, any>(
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function TooltipChildRef({ children }: any, ref) {
+        return <>{React.cloneElement(children, { ref })}</>;
+    }
+);
 
-export interface PopoverProps {
-    content: React.ReactNode;
-    show: boolean;
-    children?: React.ReactNode;
-    placement?: Placement;
-}
-
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
-    const referenceElement = React.useRef<HTMLDivElement>(null);
-    const popperElement = React.useRef<HTMLDivElement>(null);
-    const arrowElement = React.useRef<HTMLDivElement>(null);
-
-
-    const { styles, update, attributes } = usePopper(referenceElement.current, popperElement.current, {
-        placement,
-        strategy: 'fixed',
-        modifiers: [
-            { name: 'offset', options: { offset: [0, 8] } },
-            { name: 'arrow', options: { element: arrowElement.current } }
-        ]
-    });
-
-    const updateCallback = React.useCallback(() => {
-        if (update) {
-            console.log('popover updated');
-            update();
-        }
-    }, [update]);
-
-    useInterval(updateCallback, show ? 1000 : null);
+export default function Popover({ content, children, interactive = false, hideOnClick = false }: any) {
+    const childRef = React.useRef<HTMLElement>(null);
 
     return (
-        <>
-            <div className={classes.target} ref={referenceElement}>
-                {children}
-            </div>
-
-            {/* {ReactDOM.createPortal( */}
-            <div
-                className={show ? `${classes.container} ${classes.show}` : classes.container}
-                // show={show ? }
-                ref={popperElement}
-                style={styles.popper}
-                /* eslint-disable-next-line react/jsx-props-no-spreading */
-                {...attributes.popper}
-            >
-                {content}
-                <div
-                    className={`arrow-${attributes.popper?.['data-popper-placement'] ?? 'Arrow'}`}
-                    ref={arrowElement}
-                    style={styles.arrow}
-                    /* eslint-disable-next-line react/jsx-props-no-spreading */
-                    {...attributes.arrow}
-                />
-            </div>
-            {/* document.body */}
-            {/* )} */}
-        </>
+        <Tippy content={content} reference={childRef} interactive={interactive} hideOnClick={hideOnClick}>
+            <Child ref={childRef}>{children}</Child>
+        </Tippy>
     );
 }

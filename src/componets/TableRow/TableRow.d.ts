@@ -5,4 +5,5 @@ export interface TableRowProps {
     columns: TableColumnInterface[];
     children?: JSX.Element[];
     isGroup?: boolean;
+    handleGroupOpen?: (id: string) => void;
 }

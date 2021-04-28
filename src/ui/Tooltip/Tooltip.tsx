@@ -1,26 +1,22 @@
 import React from 'react';
-import Popover, { PopoverProps } from '../Popover/Popover';
-import classes from './Tooltip.module.scss';
+import Tippy from '@tippyjs/react';
+import { TooltipProps, TooltipChildProps } from './Tooltip.d';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'tippy.js/dist/tippy.css';
 
-interface TooltipProps extends Omit<PopoverProps, 'content'> {
-    text: string;
-}
+const Child = React.forwardRef<HTMLElement, TooltipChildProps>(
+    /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
+    function TooltipChildRef({ children }: TooltipChildProps, ref) {
+        return <>{React.cloneElement(children, { ref })}</>;
+    }
+);
 
-export default function Tooltip({ text, ...rest }: TooltipProps) {
-    return <Popover content={<div className={classes.container}>{text}</div>} {...rest} />;
-}
-
-export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
-    const [show, setShow] = React.useState(false);
-
-    const open = React.useCallback(() => setShow(true), [setShow]);
-    const close = React.useCallback(() => setShow(false), [setShow]);
+export default function Tooltip({ content, children, interactive = false, hideOnClick = false }: TooltipProps) {
+    const childRef = React.useRef<HTMLElement>(null);
 
     return (
-        <Tooltip {...rest} show={show}>
-            <div onMouseEnter={open} onMouseLeave={close} className="tooltip-wrapper">
-                {children}
-            </div>
-        </Tooltip>
+        <Tippy content={content} reference={childRef} interactive={interactive} hideOnClick={hideOnClick}>
+            <Child ref={childRef}>{children}</Child>
+        </Tippy>
     );
 }
