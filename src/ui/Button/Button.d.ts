@@ -11,6 +11,7 @@ export interface ButtonProps {
     iconStart?: JSX.Element;
     iconEnd?: JSX.Element;
     href?: string;
+    style?: {[key: string]: string | number};
     ripple?: RippleProps['ripple'];
     /**
      * Optional click handler

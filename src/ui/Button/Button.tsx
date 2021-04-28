@@ -16,6 +16,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             iconEnd,
             ripple = 'default',
             href,
+            style,
             onClick,
             children,
             isDisabled = false,
@@ -66,6 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                             !React.Children.count(children) && classes.rounded,
                             isDisabled && classes.disabled
                         )}
+                        style={style}
                         tabIndex={isDisabled ? -1 : tabIndex}
                         onClick={handleClick}
                     >
@@ -103,6 +105,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                             !React.Children.count(children) && classes.rounded,
                             isDisabled && classes.disabled
                         )}
+                        style={style}
                         disabled={isDisabled}
                         tabIndex={isDisabled ? -1 : tabIndex}
                         onClick={handleClick}

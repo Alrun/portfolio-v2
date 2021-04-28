@@ -7,10 +7,49 @@ import Tooltip from '../../ui/Tooltip/Tooltip';
 import Popover from '../../ui/Popover/Popover';
 import Button from '../../ui/Button/Button';
 import Checkbox from '../../ui/Checkbox/Checkbox';
+import Collapse from '../../ui/Collapse/Collapse';
 
 export default function App() {
+    const [expanded, setExpanded] = React.useState<string[]>([]);
+
+    const handleClick = (panel: string) => {
+        if (!expanded.includes(panel)) {
+            setExpanded([...expanded, panel]);
+        } else {
+            setExpanded(expanded.filter((item: any) => item !== panel));
+        }
+    };
+
     return (
         <div className={classes.app}>
+            <div>1</div>
+            <div>1</div>
+            <div>1</div>
+            <div>1</div>
+
+            <h2>Collapse</h2>
+
+            <Button style={{ display: 'block'}} onClick={() => handleClick('panel-1')}>
+                Collapse toggle 1
+            </Button>
+
+            <Collapse show={expanded.includes('panel-1')}>
+                <span>Collapse Content 1</span>
+            </Collapse>
+
+            <Button style={{ display: 'block'}} onClick={() => handleClick('panel-2')}>
+                Collapse toggle 2
+            </Button>
+
+            <Collapse show={expanded.includes('panel-2')}>
+                <span>Collapse Content 2</span>
+            </Collapse>
+
+            <div>1</div>
+            <div>1</div>
+            <div>1</div>
+            <div>1</div>
+
             <h2>Checkbox</h2>
             <div>
                 <div>
