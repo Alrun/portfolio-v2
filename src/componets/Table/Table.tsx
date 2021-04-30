@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { CheckboxChange, CheckboxItems } from './Table.d';
 
 import { reorder, resize, setData, setGroupOpen, tableSelector } from '../../redux/slices/table/table';
 import classes from './Table.module.scss';
@@ -12,6 +13,7 @@ export default function Table() {
     const { columns, items, groupOpen, loading, error } = useSelector(tableSelector);
     const dispatch = useDispatch();
 
+    const [checkedItems, setCheckedItems] = React.useState<CheckboxItems>({ ethereum: true });
     const rendersCount = React.useRef<number>(0);
 
     const rootRef = React.useRef<HTMLDivElement>(null);
@@ -60,6 +62,10 @@ export default function Table() {
     const handleGroupOpen = (id: string) => {
         dispatch(setGroupOpen(id));
     };
+
+    const handleCheckboxChange: CheckboxChange = (id, checked) => {
+        setCheckedItems({ ...checkedItems, [id]: checked });
+    };
     /**
      * Add body scroll listener
      */
@@ -106,10 +112,16 @@ export default function Table() {
                     loading={loading}
                     error={error}
                     handleGroupOpen={handleGroupOpen}
+                    checkedItems={checkedItems}
+                    handleCheckboxChange={handleCheckboxChange}
                     ref={bodyRef}
                 />
 
-                <TableFooter columns={columns} ref={scrollRef} />
+                <TableFooter
+                    ref={scrollRef}
+                    columns={columns}
+                    checkedCount={Object.values(checkedItems).filter((item) => item).length}
+                />
             </div>
 
             {/* eslint-disable-next-line no-plusplus */}

@@ -1,21 +1,26 @@
 import React from 'react';
-import { useSpring, animated, config } from 'react-spring';
 
 import classes from './TableBody.module.scss';
 import { TableBodyProps } from './TableBody.d';
 
 import TableRow from '../TableRow/TableRow';
 import TableFixedColumn from '../TableFixedColumn/TableFixedColumn';
+import Collapse from '../../ui/Collapse/Collapse';
 
 const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
     /* eslint prefer-arrow-callback: [ "error", { "allowNamedFunctions": true } ] */
     function TableBodyRef(
-        { columns, items, groupOpen = [], handleGroupOpen /* , loading, error */ }: TableBodyProps,
+        {
+            columns,
+            items,
+            groupOpen = [],
+            handleGroupOpen,
+            checkedItems = {},
+            handleCheckboxChange /* , loading, error */
+        }: TableBodyProps,
         ref
     ) {
         const rendersCount = React.useRef<number>(0);
-
-        const props = useSpring({ config: { ...config.stiff }, from: { opacity: 0 }, to: { opacity: 1 } });
 
         const fixedColumns = columns.filter((col) => col.fixed && !col.hidden);
 
@@ -40,6 +45,8 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
                     items={items}
                     groupOpen={groupOpen}
                     handleGroupOpen={handleGroupOpen}
+                    checkedItems={checkedItems}
+                    handleCheckboxChange={handleCheckboxChange}
                 />
 
                 <div className={classes.container} style={{ minWidth: `${fullWidth}px` }}>
@@ -49,8 +56,8 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
                                 <div data-group={item.id} key={item.id}>
                                     <TableRow item={item} columns={columns} />
 
-                                    {groupOpen.includes(item.id) && (
-                                        <animated.div style={props} className={classes.group}>
+                                    <Collapse show={groupOpen.includes(item.id)} id={item.id}>
+                                        <div className={classes.group}>
                                             {item.group.map((groupItem) => (
                                                 <TableRow
                                                     key={groupItem.id}
@@ -59,8 +66,8 @@ const TableBody = React.forwardRef<HTMLDivElement, TableBodyProps>(
                                                     isGroup
                                                 />
                                             ))}
-                                        </animated.div>
-                                    )}
+                                        </div>
+                                    </Collapse>
                                 </div>
                             ) : (
                                 <TableRow key={item.id} item={item} columns={columns} />

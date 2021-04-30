@@ -50,7 +50,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) onChange(e);
 
-        console.log(e.target.value);
+        // console.log(e.target.value);
     };
 
     return (

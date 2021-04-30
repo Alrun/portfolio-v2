@@ -9,7 +9,7 @@ const initialState: TableState = {
             width: 200,
             order: 1,
             resizable: true,
-            reorderable: true,
+            reorderable: false,
             fixed: true
         },
         {
@@ -94,7 +94,7 @@ const initialState: TableState = {
         order: 'desc'
     },
     items: [],
-    groupOpen: [],
+    groupOpen: ['ethereum'],
     pinned: [],
     loading: false,
     error: ''
