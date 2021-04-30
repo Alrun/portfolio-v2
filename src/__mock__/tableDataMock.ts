@@ -4,8 +4,8 @@ export const tableDataSuccess = JSON.stringify({
         currency: 'USD',
         items: [
             {
-                id: 'bitcoin',
                 title: 'Bitcoin',
+                id: 'bitcoin',
                 symbol: 'BTC',
                 image: '',
                 quantity: 1,
@@ -45,8 +45,8 @@ export const tableDataSuccess = JSON.stringify({
                 ]
             },
             {
-                id: 'Ethereum',
                 title: 'Ethereum',
+                id: 'ethereum',
                 symbol: 'ETH',
                 image: '',
                 quantity: 11,
@@ -61,11 +61,33 @@ export const tableDataSuccess = JSON.stringify({
                 gain: 91,
                 quota: 101,
                 wallet: '',
-                date: 111
+                date: 111,
+                group: [
+                    {
+                        id: 'ethereum-1',
+                        symbol: 'ETH',
+                        buyPrice: 0,
+                        quantity: 0,
+                        buyFee: 0,
+                        sellFee: 0,
+                        wallet: '',
+                        date: 0
+                    },
+                    {
+                        id: 'ethereum-2',
+                        symbol: 'ETH',
+                        buyPrice: '',
+                        quantity: '',
+                        buyFee: '',
+                        sellFee: '',
+                        wallet: '',
+                        date: ''
+                    }
+                ]
             },
             {
-                id: 'Litecoin1',
                 title: 'Litecoin',
+                id: 'litecoin',
                 symbol: 'LTC',
                 image: '',
                 quantity: 1,
@@ -83,9 +105,9 @@ export const tableDataSuccess = JSON.stringify({
                 date: 11
             },
             {
-                id: 'Litecoin2',
-                title: 'Litecoin',
-                symbol: 'LTC',
+                title: 'Uniswap',
+                id: 'uniswap',
+                symbol: 'UNI',
                 image: '',
                 quantity: 1,
                 value: 2,
@@ -102,9 +124,9 @@ export const tableDataSuccess = JSON.stringify({
                 date: 11
             },
             {
-                id: 'Litecoin3',
-                title: 'Litecoin',
-                symbol: 'LTC',
+                title: 'Monero',
+                id: 'monero',
+                symbol: 'XMR',
                 image: '',
                 quantity: 1,
                 value: 2,
@@ -121,9 +143,9 @@ export const tableDataSuccess = JSON.stringify({
                 date: 11
             },
             {
-                id: 'Litecoin4',
-                title: 'Litecoin',
-                symbol: 'LTC',
+                title: 'Binance Coin',
+                id: 'binance_coin',
+                symbol: 'BNB',
                 image: '',
                 quantity: 1,
                 value: 2,

@@ -1,3 +1,4 @@
-export interface TableFooterProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface TableFooterProps {
     columns: TableColumnsInterface[];
+    checkedCount?: number;
 }

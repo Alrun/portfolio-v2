@@ -120,7 +120,14 @@ export const tableCellsGroup = (columns: TableColumnInterface[], item: TableItem
     </TableCell>
 ];
 
-export default function TableRow({ item, columns, children, isGroup }: TableRowProps) {
+export default function TableRow({
+    item,
+    columns,
+    children,
+    isGroup,
+    isCheckboxChecked,
+    handleCheckboxChange
+}: TableRowProps) {
     const defineGroup = isGroup ? (
         <div className={classes.root}>
             {tableCellsGroup(columns, item).filter((cell) => !cell.props.col.fixed && !cell.props.col.hidden)}
@@ -131,29 +138,16 @@ export default function TableRow({ item, columns, children, isGroup }: TableRowP
         </div>
     );
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (handleCheckboxChange) handleCheckboxChange(item.id, e.target.checked);
+    };
+
     return children ? (
         <div className={classes.root}>
-            <Checkbox />
+            <Checkbox color="secondary" isChecked={isCheckboxChecked} onChange={handleChange} />
             {children}
         </div>
     ) : (
         defineGroup
     );
 }
-// <div className={classes.root}>
-//     {columns &&
-//     columns.map((item: any) => (
-//         <div
-//             data-col-id={item.id}
-//             style={{
-//                 minWidth: item.width,
-//                 width: item.width,
-//                 maxWidth: item.width,
-//                 order: item.order
-//             }}
-//             className={classes.col}
-//         >
-//             <span>{quantity}</span>
-//         </div>
-//     ))}
-// </div>

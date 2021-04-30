@@ -10,7 +10,7 @@ import Checkbox from '../../ui/Checkbox/Checkbox';
 import Collapse from '../../ui/Collapse/Collapse';
 
 export default function App() {
-    const [expanded, setExpanded] = React.useState<string[]>([]);
+    const [expanded, setExpanded] = React.useState<string[]>(['panel-1']);
 
     const handleClick = (panel: string) => {
         if (!expanded.includes(panel)) {
